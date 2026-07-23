@@ -392,4 +392,58 @@ mk('c_digital',{
       {value:56.8,name:'Counter / drive-thru',itemStyle:{color:'#d8cfc0'}}
     ]}]
 });
+// 5.2 price vs costs
+mk('c_price',{
+  grid:{left:56,right:24,top:52,bottom:52},
+  legend:{data:['Menu prices (FAFH CPI)','Food input costs']},
+  xAxis:{type:'category',data:['2021','2022','2023','2024','2025','2026'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11}},
+  yAxis:{type:'value',min:90,max:135,name:'index (2021=100)',nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
+  series:[
+    {name:'Menu prices (FAFH CPI)',type:'line',data:[100,106.2,113.6,119.4,123.1,127.4],lineStyle:{color:RED,width:3},itemStyle:{color:RED},symbol:'circle',symbolSize:7,label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK}},
+    {name:'Food input costs',type:'line',data:[100,108.9,116.8,120.2,122.6,124.9],lineStyle:{color:NAVY,width:2.5,type:'dashed'},itemStyle:{color:NAVY},symbol:'diamond',symbolSize:8}
+  ]
+});
+// 6.1 delivery dollar
+mk('c_stack',{
+  grid:{left:120,right:40,top:40,bottom:40},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12},formatter:p=>{let s=p[0].name;let t=0;p.forEach(x=>{s+='<br/>'+x.marker+x.seriesName+': $'+x.value;t+=+x.value;});return s+'<br/><b>Total $'+t.toFixed(2)+'</b>';}},
+  xAxis:{type:'value',max:30,axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,formatter:'${value}'},splitLine:{lineStyle:{color:'#e8e1d5'}}},
+  yAxis:{type:'category',data:['Aggregator order','Owned-channel order'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK}},
+  legend:{bottom:0},
+  series:[
+    {name:'Food cost',type:'bar',stack:'a',data:[9.0,9.0],itemStyle:{color:'#d8cfc0',borderColor:INK,borderWidth:1},barWidth:'52%',label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}},
+    {name:'Labour',type:'bar',stack:'a',data:[7.5,7.5],itemStyle:{color:NAVY,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}},
+    {name:'Aggregator commission',type:'bar',stack:'a',data:[8.4,0],itemStyle:{color:RED,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:p=>p.value?'$'+p.value:''}},
+    {name:'Delivery & other',type:'bar',stack:'a',data:[1.2,4.5],itemStyle:{color:GOLD,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}},
+    {name:'Store margin',type:'bar',stack:'a',data:[3.9,9.0],itemStyle:{color:GREEN,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}}
+  ]
+});
+// 7.1 wages
+mk('c_wages',{
+  grid:{left:56,right:24,top:52,bottom:52},
+  legend:{data:['Level 1','Level 2','Level 3']},
+  xAxis:{type:'category',data:['Jul 2023','Jul 2024','Jul 2025','Jul 2026'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11}},
+  yAxis:{type:'value',min:20,max:30,axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,formatter:'${value}'},splitLine:{lineStyle:{color:'#e8e1d5'}}},
+  series:[
+    {name:'Level 1',type:'bar',data:[23.23,24.10,24.95,26.44],itemStyle:{color:RED,borderColor:INK,borderWidth:1},barWidth:'26%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>'$'+p.value.toFixed(2)}},
+    {name:'Level 2',type:'bar',data:[24.36,25.28,26.17,27.71],itemStyle:{color:NAVY,borderColor:INK,borderWidth:1},barWidth:'26%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>'$'+p.value.toFixed(2)}},
+    {name:'Level 3',type:'bar',data:[25.63,26.60,27.53,29.15],itemStyle:{color:GOLD,borderColor:INK,borderWidth:1},barWidth:'26%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>'$'+p.value.toFixed(2)}}
+  ]
+});
+// 7.2 dayparts
+mk('c_daypart',{
+  grid:{left:56,right:24,top:52,bottom:40},
+  tooltip:{trigger:'item',backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12}},
+  legend:{bottom:0},
+  series:[{type:'pie',radius:['0%','68%'],center:['50%','46%'],roseType:'radius',itemStyle:{borderColor:'#faf8f5',borderWidth:3},
+    label:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK,formatter:'{b} {d}%'},
+    data:[
+      {value:22,name:'Breakfast',itemStyle:{color:GOLD}},
+      {value:31,name:'Lunch',itemStyle:{color:RED}},
+      {value:33,name:'Dinner',itemStyle:{color:NAVY}},
+      {value:14,name:'Late night',itemStyle:{color:'#8a8a8a'}}
+    ]}]
+});
 </script>
+</body>
+</html>
