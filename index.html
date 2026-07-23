@@ -1,1 +1,756 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Colonel's Battleground — Australian QSR Industry Deep Research for KFC Australia</title>
+<meta name="description" content="Deep research on Australia's quick service restaurant industry: competitive set, pricing, consumer trends and strategic recommendations for KFC Australia leadership.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --paper:#f4efe6;
+    --paper-deep:#ece5d8;
+    --card:#fffdf7;
+    --ink:#211d19;
+    --ink-soft:#4c463e;
+    --muted:#8b8172;
+    --line:#d9cfbc;
+    --red:#c30000;
+    --red-deep:#8f0000;
+    --charcoal:#2e3030;
+    --navy:#26436b;
+    --gold:#b08a2e;
+    --green:#3f6d4e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',-apple-system,'Segoe UI',sans-serif;
+    font-size:16px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--red);color:#fff}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+  .serif{font-family:'Fraunces',Georgia,serif}
+
+  /* ---------- progress bar ---------- */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--red);z-index:200;transition:width .12s linear}
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:92vh;
+    display:flex;flex-direction:column;justify-content:space-between;
+    padding:clamp(24px,4vw,56px);
+    border-bottom:1px solid var(--line);
+    position:relative;overflow:hidden;
+    background:var(--paper);
+  }
+  .hero-bg{
+    position:absolute;right:-6vw;top:50%;transform:translateY(-50%);
+    font-family:'Fraunces',serif;font-weight:700;
+    font-size:44vw;line-height:1;color:transparent;
+    -webkit-text-stroke:1px var(--line);
+    user-select:none;pointer-events:none;
+  }
+  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2;flex-wrap:wrap;gap:12px}
+  .kicker{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--red);display:inline-flex;align-items:center;gap:10px;
+  }
+  .kicker::before{content:"";width:34px;height:1px;background:var(--red)}
+  .hero-date{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .hero-mid{position:relative;z-index:2;max-width:1000px}
+  h1.hero-title{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:clamp(44px,7.2vw,104px);
+    line-height:1.02;letter-spacing:-.015em;margin:26px 0 22px;
+  }
+  h1.hero-title em{font-style:italic;font-weight:300;color:var(--red)}
+  .hero-sub{font-size:clamp(16px,1.6vw,20px);color:var(--ink-soft);max-width:680px;line-height:1.6}
+  .hero-stats{
+    position:relative;z-index:2;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    border-top:1px solid var(--line);margin-top:48px;
+  }
+  .hstat{padding:22px 18px 6px 0;border-right:1px solid var(--line);margin-right:18px}
+  .hstat:last-child{border-right:none}
+  .hstat .num{font-family:'Fraunces',serif;font-size:clamp(30px,3.4vw,46px);font-weight:600;line-height:1.05;color:var(--ink)}
+  .hstat .num sup{font-size:.45em;color:var(--red);font-family:'IBM Plex Mono',monospace;font-weight:500}
+  .hstat .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:8px;line-height:1.5}
+  .scroll-cue{position:absolute;bottom:26px;right:clamp(24px,4vw,56px);z-index:2;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;display:flex;align-items:center;gap:10px}
+  .scroll-cue::after{content:"";width:1px;height:52px;background:var(--muted);animation:cue 2.2s ease-in-out infinite}
+  @keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+  /* ---------- layout with chapter rail ---------- */
+  .shell{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1440px;margin:0 auto}
+  nav.rail{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    padding:56px 28px 40px 40px;border-right:1px solid var(--line);
+  }
+  .rail-head{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+  .rail a{
+    display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--ink-soft);
+    padding:9px 0;border-bottom:1px dashed transparent;font-size:13.5px;line-height:1.35;
+    transition:color .2s;
+  }
+  .rail a .idx{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);min-width:22px;transition:color .2s}
+  .rail a:hover{color:var(--ink)}
+  .rail a.active{color:var(--red);font-weight:600}
+  .rail a.active .idx{color:var(--red)}
+  .rail-foot{margin-top:34px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.06em}
+
+  main{padding:0 clamp(24px,4.5vw,72px) 120px;min-width:0}
+  section.chapter{padding-top:88px;scroll-margin-top:10px}
+  .ch-head{display:flex;align-items:baseline;gap:20px;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:38px;flex-wrap:wrap}
+  .ch-num{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:var(--red);font-weight:600}
+  .ch-title{font-family:'Fraunces',serif;font-size:clamp(30px,3.6vw,48px);font-weight:600;line-height:1.08;letter-spacing:-.01em}
+  .ch-deck{font-size:17px;color:var(--ink-soft);max-width:760px;margin:-18px 0 34px}
+  .content{max-width:780px}
+  h3{font-family:'Fraunces',serif;font-size:23px;font-weight:600;margin:44px 0 14px;line-height:1.25}
+  h4{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin:34px 0 12px;font-weight:600}
+  p{margin-bottom:18px;color:var(--ink-soft)}
+  p strong,li strong{color:var(--ink)}
+  .lead{font-size:19px;line-height:1.7;color:var(--ink)}
+  ul.tight{margin:0 0 20px 22px}
+  ul.tight li{margin-bottom:10px;color:var(--ink-soft)}
+  sup.cite{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500}
+  sup.cite a{color:var(--red);text-decoration:none;padding:0 1px}
+  sup.cite a:hover{text-decoration:underline}
+
+  /* callout */
+  .callout{
+    border-left:3px solid var(--red);background:var(--card);
+    padding:20px 26px;margin:30px 0;font-size:15.5px;color:var(--ink);
+  }
+  .callout .co-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:8px;font-weight:600}
+
+  /* exhibits */
+  .exhibit{margin:52px calc(-1 * clamp(0px,2vw,28px));padding:34px clamp(20px,3vw,44px);background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .exhibit-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .exhibit-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--red);font-weight:600}
+  .exhibit-src{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em}
+  .chart{width:100%;height:460px}
+  .chart.tall{height:520px}
+  @media (max-width:760px){.chart{height:380px}.chart.tall{height:440px}}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto;margin:34px 0;border-top:2px solid var(--ink)}
+  table{width:100%;border-collapse:collapse;font-size:13.8px;min-width:680px}
+  caption{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 0}
+  th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;text-align:left;color:var(--ink);padding:12px 14px;border-bottom:1px solid var(--ink);background:var(--paper-deep);white-space:nowrap}
+  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft);line-height:1.5}
+  td b,td strong{color:var(--ink)}
+  tr.hl td{background:#fbf3e4}
+  td .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 8px;border:1px solid var(--line);text-transform:uppercase;color:var(--ink-soft);margin-right:4px;white-space:nowrap}
+  td .pill.red{border-color:var(--red);color:var(--red)}
+
+  /* stat band */
+  .band{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));border:1px solid var(--line);background:var(--card);margin:36px 0}
+  .band>div{padding:22px 24px;border-right:1px solid var(--line)}
+  .band>div:last-child{border-right:none}
+  .band .n{font-family:'Fraunces',serif;font-size:34px;font-weight:600;line-height:1.1}
+  .band .n.red{color:var(--red)}
+  .band .t{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;line-height:1.5}
+
+  /* SWOT */
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin:36px 0}
+  .swot>div{background:var(--card);padding:26px 28px}
+  .swot h5{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .swot h5::before{content:"";width:10px;height:10px;background:var(--ink)}
+  .swot .s h5::before{background:var(--green)}
+  .swot .w h5::before{background:var(--gold)}
+  .swot .o h5::before{background:var(--navy)}
+  .swot .t h5::before{background:var(--red)}
+  .swot li{margin-bottom:10px;font-size:14px;color:var(--ink-soft);margin-left:16px}
+  @media (max-width:820px){.swot{grid-template-columns:1fr}}
+
+  /* recommendations */
+  .rec{border-top:1px solid var(--line);padding:30px 0;display:grid;grid-template-columns:64px 1fr;gap:22px}
+  .rec:last-child{border-bottom:1px solid var(--line)}
+  .rec .rn{font-family:'Fraunces',serif;font-size:40px;font-weight:300;color:var(--red);line-height:1}
+  .rec h6{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:8px}
+  .rec p{font-size:14.8px;margin-bottom:10px}
+  .rec .kpi{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--navy);letter-spacing:.04em;border-left:2px solid var(--navy);padding-left:12px;margin-top:8px;line-height:1.6}
+
+  /* sources */
+  .sources li{list-style:none;font-size:13px;color:var(--ink-soft);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:14px;line-height:1.5}
+  .sources li .snum{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--red);min-width:30px;padding-top:3px;flex-shrink:0}
+  .sources a{color:var(--navy);text-decoration:none;word-break:break-all}
+  .sources a:hover{text-decoration:underline}
+
+  footer{border-top:2px solid var(--ink);margin-top:90px;padding:34px 0 10px;font-size:12.5px;color:var(--muted);line-height:1.8}
+  footer .disc{max-width:820px}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .rv.on{opacity:1;transform:none}
+
+  /* mobile nav */
+  .mobilenav{display:none;position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--line);padding:12px 20px}
+  .mobilenav select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:10px;background:var(--card);border:1px solid var(--line);color:var(--ink)}
+  @media (max-width:1020px){
+    .shell{grid-template-columns:1fr}
+    nav.rail{display:none}
+    .mobilenav{display:block}
+    .hero-bg{font-size:60vw}
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-bg">11</div>
+  <div class="hero-top">
+    <span class="kicker">Deep Research · Industry &amp; Strategy Report</span>
+    <span class="hero-date">Prepared 23 July 2026 · For KFC Australia Leadership</span>
+  </div>
+  <div class="hero-mid">
+    <h1 class="hero-title">The Colonel's<br>Battleground: <em>Australian<br>QSR, decoded.</em></h1>
+    <p class="hero-sub">A data-grounded read of Australia's A$29.7&nbsp;billion fast food &amp; takeaway industry — the competitive set closing in on KFC, the value war on pricing, the delivery duopoly, and the strategic moves that matter most for the next three years.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="num" data-count="817">0</div><div class="lbl">KFC restaurants in Australia — #3 largest food chain nationally</div></div>
+    <div class="hstat"><div class="num" data-prefix="A$" data-count="1.24" data-decimals="2" data-suffix="bn">0</div><div class="lbl">FY26 revenue, Collins Foods' KFC Australia segment (record)</div></div>
+    <div class="hstat"><div class="num" data-count="43.2" data-decimals="1" data-suffix="%">0</div><div class="lbl">Of KFC Australia sales now digital (app, kiosk, delivery)</div></div>
+    <div class="hstat"><div class="num" data-count="6.3" data-decimals="1" data-prefix="A$" data-suffix="bn">0</div><div class="lbl">Size of the takeaway chicken category KFC leads</div></div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</header>
+
+<div class="mobilenav">
+  <select id="mobileSelect" onchange="if(this.value)location.hash=this.value">
+    <option value="">Jump to chapter…</option>
+    <option value="#ch1">01 · Executive summary</option>
+    <option value="#ch2">02 · Market landscape</option>
+    <option value="#ch3">03 · KFC Australia today</option>
+    <option value="#ch4">04 · The competitive set</option>
+    <option value="#ch5">05 · Pricing &amp; the value war</option>
+    <option value="#ch6">06 · Consumer &amp; channel trends</option>
+    <option value="#ch7">07 · Cost &amp; regulatory environment</option>
+    <option value="#ch8">08 · SWOT</option>
+    <option value="#ch9">09 · Strategic recommendations</option>
+    <option value="#ch10">10 · Risks, sources &amp; disclaimer</option>
+  </select>
+</div>
+
+<div class="shell">
+<nav class="rail" id="rail">
+  <div class="rail-head">Contents</div>
+  <a href="#ch1"><span class="idx">01</span>Executive summary</a>
+  <a href="#ch2"><span class="idx">02</span>Market landscape</a>
+  <a href="#ch3"><span class="idx">03</span>KFC Australia today</a>
+  <a href="#ch4"><span class="idx">04</span>The competitive set</a>
+  <a href="#ch5"><span class="idx">05</span>Pricing &amp; the value war</a>
+  <a href="#ch6"><span class="idx">06</span>Consumer &amp; channel trends</a>
+  <a href="#ch7"><span class="idx">07</span>Cost &amp; regulatory environment</a>
+  <a href="#ch8"><span class="idx">08</span>SWOT assessment</a>
+  <a href="#ch9"><span class="idx">09</span>Strategic recommendations</a>
+  <a href="#ch10"><span class="idx">10</span>Risks, sources &amp; disclaimer</a>
+  <div class="rail-foot">AUSTRALIAN QSR<br>DEEP RESEARCH<br><br>DATA AS OF<br>JULY 2026</div>
+</nav>
+
+<main>
+
+<!-- ================= CH 1 EXEC SUMMARY ================= -->
+<section class="chapter rv" id="ch1">
+  <div class="ch-head"><span class="ch-num">01 /</span><h2 class="ch-title">Executive summary</h2></div>
+  <div class="content">
+    <p class="lead">KFC enters the second half of 2026 as Australia's strongest-performing large QSR brand — record franchisee revenue, accelerating same-store sales, and the industry's best brand-health scores — but it does so in a market that is barely growing in real terms, where every major rival is investing heavily in value menus, network expansion and digital channels.</p>
+    <p>Australia's fast food &amp; takeaway services industry reached <strong>A$29.7&nbsp;billion in 2025–26</strong>, but revenue grew just <strong>0.3%</strong> in the year and only 1.4% annualised over five years — a mature, share-driven market.<sup class="cite"><a href="#src-ibis">[2]</a></sup> Within it, the takeaway chicken category KFC dominates is worth <strong>A$6.3&nbsp;billion</strong> across ~1,972 businesses.<sup class="cite"><a href="#src-chicken">[3]</a></sup> KFC's <strong>817 restaurants</strong> make it the third-largest food chain in the country, behind Subway (1,256) and McDonald's (1,078).<sup class="cite"><a href="#src-sh26">[4]</a></sup></p>
+    <p>Collins Foods, KFC's largest Australian franchisee (295 of the ~817 restaurants), reported record FY26 results: revenue up <strong>7.6% to A$1,241.3&nbsp;million</strong>, same-store sales up <strong>2.7%</strong>, underlying EBITDA of A$237.1&nbsp;million, and digital sales reaching <strong>43.2% of revenue</strong>.<sup class="cite"><a href="#src-ar">[5]</a></sup> Management attributes momentum to product innovation (Zinger Banh Mi, Upside Down Double), a reset of the delivery fee structure, kiosk rollout, and sustained brand-health leadership across brand index, buzz, satisfaction and recommendation.<sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+    <p>The strategic tension for leadership is threefold. First, the <strong>value war is escalating</strong>: McDonald's launched a three-tier McSmart range (A$6.95–9.95) on 1 July 2026, Hungry Jack's holds the entry-price crown with its A$3.00 BBQ Cheeseburger, and Guzman y Gomez sells a A$12 mini meal — while KFC's entry point sits at the A$4.95 Go Bucket.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup><sup class="cite"><a href="#src-hj">[12]</a></sup> Second, the <strong>delivery channel is consolidating</strong> into an Uber Eats–DoorDash duopoly after Menulog's November 2025 exit, shifting negotiating power toward platforms.<sup class="cite"><a href="#src-menulog">[14]</a></sup> Third, <strong>labour costs are ratcheting up</strong> — award wages rose 4.75% on 1 July 2026, the third consecutive above-inflation increase.<sup class="cite"><a href="#src-fwc">[17]</a></sup></p>
+    <p>The report's central recommendation: KFC Australia should press its current advantage by <strong>attacking new dayparts</strong> (breakfast and late-night, together 36% of the QSR market and its fastest-growing segments), <strong>defending a sharpened value architecture</strong> anchored on Go Bucket and family feasts, and <strong>rebalancing delivery economics toward owned digital channels</strong> — while sustaining the 7–10 new-restaurant annual build rate and the Kwench beverage rollout already planned for FY27–28.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-quartr">[6]</a></sup></p>
+  </div>
+</section>
+
+<!-- ================= CH 2 MARKET ================= -->
+<section class="chapter rv" id="ch2">
+  <div class="ch-head"><span class="ch-num">02 /</span><h2 class="ch-title">Market landscape</h2></div>
+  <p class="ch-deck">A A$29.7&nbsp;billion industry that has stopped growing in real terms — which makes share, dayparts and channel mix the only games that matter.</p>
+  <div class="content">
+    <h3>2.1 &nbsp;Size, growth and structure</h3>
+    <p>IBISWorld sizes Australia's Fast Food &amp; Takeaway Food Services industry (ANZSIC H4512) at <strong>A$29.7&nbsp;billion in 2025–26</strong>, across <strong>28,219 businesses</strong>. Growth has decelerated sharply: just 0.3% in 2025–26 and a 1.4% CAGR over 2021–26, with competition described as "high and increasing."<sup class="cite"><a href="#src-ibis">[2]</a></sup><sup class="cite"><a href="#src-ibisb">[2b]</a></sup> Burgess Rawson's mid-2025 industry review notes one fast food outlet for every 994 Australians and cites Euromonitor forecasts of roughly <strong>32% growth in the quick service market over the five years to 2029</strong> — growth that will be fought over by both incumbents and new entrants.<sup class="cite"><a href="#src-br">[7]</a></sup></p>
+    <p>The chicken segment is the industry's second great pillar after burgers. IBISWorld's Takeaway Chicken Shops category is worth <strong>A$6.3&nbsp;billion (2026)</strong> across ~1,972 businesses, having compounded at 2.8% over 2020–25 — faster than the broader industry — with Yum! Restaurants Australia, PAGAC (Chicken Treat) and Collins Foods named as its largest players.<sup class="cite"><a href="#src-chicken">[3]</a></sup> Chicken's appeal — a cheaper, versatile protein with strong family-sharing formats — has insulated the category from the worst of cost-of-living trading-down, and consumers increasingly swap pricier full-service dining for QSR occasions.<sup class="cite"><a href="#src-statista">[8]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 2.1 — Network scale</span><span class="exhibit-src">Store counts, Jan–Jul 2026 vintages · ScrapeHero</span></div>
+      <div id="chart-stores" class="chart tall"></div>
+    </div>
+
+    <h3>2.2 &nbsp;Share of demand: a two-brand market with a restless tail</h3>
+    <p>Two datasets frame the market's concentration. Consumer research firm Nature measured <strong>share of QSR spend</strong> in 2023: McDonald's at <strong>54%</strong>, KFC at <strong>22%</strong> and Hungry Jack's at <strong>12%</strong> — McDonald's reach built on convenience and range.<sup class="cite"><a href="#src-nature">[9]</a></sup> On a revenue-share basis, Burgess Rawson puts McDonald's at <strong>23.2% of national fast food revenue</strong>.<sup class="cite"><a href="#src-br">[7]</a></sup> Either way, the structure is consistent: McDonald's is the category's gravitational centre, KFC is the clear number two — and the number two position is precisely where competitive pressure concentrates, from burger chains discounting downward and from fast-growing challengers (Guzman y Gomez, Wendy's) scaling upward.</p>
+    <p>Store-count rankings tell a subtler story: Subway (1,256) and McDonald's (1,078) lead on footprint, but KFC (817) out-earns most larger networks per site — Collins Foods' 295 KFC restaurants alone generated A$1.24&nbsp;billion in FY26, implying network sales per restaurant well above A$4&nbsp;million.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-sh26">[4]</a></sup> And KFC is still building: it opened its 800th Australian restaurant (Oran Park, Sydney) in September 2024 — with KFC South Pacific calling itself "the fastest growing quick-service restaurant in Australia over the past six years."<sup class="cite"><a href="#src-ir">[4b]</a></sup> GapMaps' 2025 network census confirms the momentum: 2025 was the sector's <strong>strongest year of net store growth in a decade (+250 stores across the top 36 brands: 359 openings, 109 closures)</strong>, and KFC led all major QSR brands on net growth (<strong>+29</strong>), ahead of McDonald's (+25) and Subway (+18); the top five QSR brands are now within 3&nbsp;km of 82% of Australians.<sup class="cite"><a href="#src-gap">[4c]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 2.2 — Share of QSR spend</span><span class="exhibit-src">Consumer survey, 2023 · Nature via AdNews</span></div>
+      <div id="chart-share" class="chart"></div>
+    </div>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 2.3 — Who is actually growing</span><span class="exhibit-src">Net new stores, 12 months to Dec 2025 · GapMaps</span></div>
+      <div id="chart-netgrowth" class="chart"></div>
+    </div>
+
+    <h3>2.3 &nbsp;New entrants are raising the competitive temperature</h3>
+    <p>Statista's 2025 market review flags a wave of US brands entering or circling Australia: <strong>Wendy's opened its first Australian restaurant in January 2025</strong>, while Popeyes, Chuck E. Cheese and Firehouse Subs have announced intentions; In-N-Out ran a Sydney pop-up in June 2025.<sup class="cite"><a href="#src-statista">[8]</a></sup> Burgess Rawson likewise credits new entrants such as Wendy's as a driver of its 32% growth forecast — intensifying competition "among established brands."<sup class="cite"><a href="#src-br">[7]</a></sup> Popeyes is the most strategically significant for KFC: a direct fried-chicken assault from a sister-benchmark brand. The implication is that KFC's product-quality and brand-love moat must be defended before the entrant gains beachhead scale, not after.</p>
+    <div class="callout"><span class="co-tag">So what</span>For KFC leadership, market maturity means growth must be manufactured — through daypart expansion (breakfast, late-night), new occasions (beverages via Kwench), share capture in chicken, and network densification — rather than ridden on category tailwinds.</div>
+  </div>
+</section>
+
+<!-- ================= CH 3 KFC ================= -->
+<section class="chapter rv" id="ch3">
+  <div class="ch-head"><span class="ch-num">03 /</span><h2 class="ch-title">KFC Australia today</h2></div>
+  <p class="ch-deck">Record revenue, best-in-category brand health, and a digital mix that has nearly tripled its share of sales in three years.</p>
+  <div class="content">
+    <h3>3.1 &nbsp;Ownership and operating structure</h3>
+    <p>KFC's Australian network of ~817 restaurants operates under a mixed ownership model. ASX-listed <strong>Collins Foods is the largest franchisee with 295 restaurants</strong> (FY26),<sup class="cite"><a href="#src-ar">[5]</a></sup> Yum! Brands' local subsidiary (Yum! Restaurants Australia / KFC South Pacific) owns and operates <strong>around 75 equity restaurants</strong>, and the remaining <strong>~425 restaurants are operated by independent franchisees</strong> — a spectrum that runs from groups operating as many as ~115 restaurants down to individual owner-operators with a single site (ownership structure per KFC Australia, July 2026).<sup class="cite"><a href="#src-sh26">[4]</a></sup> Collins' public filings therefore provide an unusually transparent window into roughly 36% of the brand's Australian system — its economics, margins and channel mix are the best available public proxy for the wider network.</p>
+    <p>Strategically, Collins has simplified to become a pure KFC operator: in FY26 it agreed to exit Taco Bell, transferring 20 restaurants to a Yum!/Restaurant Brands Australia joint venture and closing seven, while expanding its German KFC footprint via the Munich acquisition.<sup class="cite"><a href="#src-quartr">[6]</a></sup><sup class="cite"><a href="#src-ar">[5]</a></sup> For KFC Australia leadership this matters because the brand's largest franchise partner is now financially and managerially single-focused on KFC.</p>
+
+    <h3>3.2 &nbsp;Financial trajectory: FY24–FY26</h3>
+    <p>FY26 (53 weeks ended 3 May 2026) was a record year: KFC Australia revenue of <strong>A$1,241.3&nbsp;million (+7.6%)</strong>, same-store sales growth of <strong>+2.7%</strong> with second-half momentum outpacing the first half, and underlying EBITDA of <strong>A$237.1&nbsp;million</strong>. Eight new restaurants opened against one closure and one relocation, taking the Collins footprint to 295; 33 remodels (including 3 "supercharged") were delivered.<sup class="cite"><a href="#src-ar">[5]</a></sup> The recovery is clear against FY25's trough (+0.3% SSS, margin compression to 19.3%) — driven by product innovation, operational excellence, commodity deflation in chicken and potatoes, and the delivery fee reset, partially offset by deliberate investment in consumer value.<sup class="cite"><a href="#src-fy25">[10]</a></sup><sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+    <p>Early FY27 trading is strong: total KFC Australia sales up <strong>6.7%</strong> in the first eight weeks of FY27.<sup class="cite"><a href="#src-rb">[1]</a></sup> Collins plans 7–10 new Australian restaurants in FY27 and remains on track for 28–30 new builds by 2028.<sup class="cite"><a href="#src-quartr">[6]</a></sup><sup class="cite"><a href="#src-fy25">[10]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 3.1 — KFC Australia (Collins Foods) performance</span><span class="exhibit-src">Collins Foods FY24–FY26 results</span></div>
+      <div id="chart-fin" class="chart tall"></div>
+    </div>
+
+    <h3>3.3 &nbsp;Digital and brand health: the two compounding assets</h3>
+    <p>Digital channels — app, kiosks and delivery — accounted for <strong>43.2% of KFC Australia sales in FY26, up from 34.2% in FY25 and 29.4% in FY24</strong>, driven by app adoption, kiosk rollout to 100+ restaurants, and delivery growth after the fee-structure reset.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-fy25">[10]</a></sup> On brand, KFC "continues to dominate its QSR peers on the brand metrics that matter most" — brand index, buzz, satisfaction and recommendation — and holds the highest QSR brand index in the market.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-fy25">[10]</a></sup> Independent research adds texture: 76% of Australians say KFC has the best-tasting hot chips, and KFC ties McDonald's at 60% on perceived value for money, just behind Hungry Jack's 61%.<sup class="cite"><a href="#src-nature">[9]</a></sup></p>
+    <p>Marketing has modernised around the <strong>"FLG" (Finger Lickin' Good) platform</strong> and a run of traffic-driving innovations — Zinger Banh Mi, Upside Down Double, Hot &amp; Crispy Wrap in FY26; Waffle Double Chicken and Zinger Nachos in FY25 — which management credits with attracting new and lapsed users.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-fy25">[10]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 3.2 — Digital share of KFC Australia sales</span><span class="exhibit-src">Collins Foods FY24–FY26 results</span></div>
+      <div id="chart-digital" class="chart"></div>
+    </div>
+
+    <h3>3.4 &nbsp;The FY27–28 agenda already in motion</h3>
+    <p>Three growth programs are publicly committed. <strong>Kwench by KFC</strong> — Yum!'s global beverage platform — rolls out nationally across FY27–28, adding a new category occasion. A <strong>breakfast trial in 16 Gold Coast restaurants</strong> and expanded <strong>late-night hours</strong> target the dayparts that made up 36% of the Australian QSR market in 2025 and grew fastest (breakfast +7%, late-night +11%). And the network keeps building at 7–10 restaurants a year.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-quartr">[6]</a></sup> Group capex of A$80–100&nbsp;million is earmarked for FY27, weighted to Kwench, new restaurants and asset modernisation.<sup class="cite"><a href="#src-quartr">[6]</a></sup></p>
+  </div>
+</section>
+
+<!-- ================= CH 4 COMPETITIVE SET ================= -->
+<section class="chapter rv" id="ch4">
+  <div class="ch-head"><span class="ch-num">04 /</span><h2 class="ch-title">The competitive set</h2></div>
+  <p class="ch-deck">Four distinct threats: McDonald's scale machine, Hungry Jack's value aggression, Guzman y Gomez's growth economics, and a restless chicken tail.</p>
+  <div class="content">
+    <h3>4.1 &nbsp;McDonald's Australia — the scale and value benchmark</h3>
+    <p>McDonald's operates <strong>1,078 restaurants</strong> and holds roughly 23% of national fast food revenue, with over half of consumer QSR spend in Nature's survey.<sup class="cite"><a href="#src-sh26">[4]</a></sup><sup class="cite"><a href="#src-br">[7]</a></sup><sup class="cite"><a href="#src-nature">[9]</a></sup> It is mid-way through its <strong>largest expansion since the 1990s — ~A$1&nbsp;billion committed, targeting well over 1,000 restaurants by 2027</strong> — with the stated goal of putting most Australians within a five-minute drive of a store.<sup class="cite"><a href="#src-br">[7]</a></sup> On 1 July 2026 it refreshed its value architecture into three McSmart tiers (Saver A$6.95 app-only, Meal A$7.95, Plus A$9.95), replacing the 2025 price promise.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup> McDonald's competes on ubiquity, breakfast (McCafé) dominance, and an app ecosystem KFC must match — its Loose Change entry pricing undercuts every KFC item except promotional sliders.</p>
+
+    <h3>4.2 &nbsp;Hungry Jack's — the value aggressor</h3>
+    <p>Competitive Foods' Hungry Jack's (Burger King's Australian arm) runs <strong>489 restaurants</strong> and takes ~12% of QSR spend.<sup class="cite"><a href="#src-sh26">[4]</a></sup><sup class="cite"><a href="#src-nature">[9]</a></sup> It is the market's most aggressive entry-price player: the Penny Pinchers menu anchors at a <strong>A$3.00 BBQ Cheeseburger and A$3.75 Chicken Royale</strong>, with Super Stunner bundles (burger + chips + drink + nuggets + mini Drumstick) from A$9.15 and a relentless cadence of app deals and vouchers.<sup class="cite"><a href="#src-hj">[12]</a></sup> Notably, HJ has been expanding its fried-chicken range (Jack's Fried Chicken tenders, saucy ribs, Chicken Royale promotions) — a direct encroachment on KFC's protein turf — while consumers rate it the market's best value for money (61%).<sup class="cite"><a href="#src-hj">[12]</a></sup><sup class="cite"><a href="#src-nature">[9]</a></sup></p>
+
+    <h3>4.3 &nbsp;Guzman y Gomez — the growth outlier KFC should study</h3>
+    <p>GYG is the standout growth story in Australian QSR. FY25 global network sales rose <strong>23% to A$1.18&nbsp;billion</strong>; the Australia segment (incl. Singapore/Japan) reached <strong>A$1,168.5&nbsp;million with +9.6% comparable sales</strong> — triple KFC's FY26 SSS rate — from 250 segment restaurants (224 in Australia at end-FY25, growing to <strong>~250 in Australia by May 2026</strong> with 32 new openings in FY26).<sup class="cite"><a href="#src-gyg">[13]</a></sup><sup class="cite"><a href="#src-gyg2">[13b]</a></sup><sup class="cite"><a href="#src-gyg26">[13f]</a></sup> Its unit economics are formidable: drive-thru restaurants average <strong>A$6.7&nbsp;million in annual volume at ~22% restaurant margins</strong>, franchisees earn a median 50% ROI, owned digital is 19.5% of network sales, and a 100+ restaurant Australian pipeline plus 24/7 daypart expansion (23 restaurants round-the-clock by Q1 FY26) point directly at late-night and drive-thru occasions KFC is also targeting — a focus sharpened by GYG's May 2026 decision to close all eight US restaurants and concentrate capital on Australia.<sup class="cite"><a href="#src-gyg2">[13b]</a></sup><sup class="cite"><a href="#src-gygar">[13c]</a></sup><sup class="cite"><a href="#src-gygq">[13d]</a></sup><sup class="cite"><a href="#src-gyg26">[13f]</a></sup> GYG proves the market will reward premium-priced, fresh-positioned QSR at scale — and it is now competing for the same drive-thru sites, the same late-night daypart, and the same value conversation (A$12 Chicken Mini Meal).<sup class="cite"><a href="#src-gygmeal">[15]</a></sup></p>
+
+    <h3>4.4 &nbsp;The chicken tail and everyone else</h3>
+    <p><strong>Red Rooster</strong> (325 restaurants, Craveable Brands stable alongside Oporto and Chicken Treat) remains the #2 chicken brand but has been network-shrinking and suburban-focused; it punches below its heritage weight.<sup class="cite"><a href="#src-sh26">[4]</a></sup> <strong>Oporto</strong> and <strong>Nando's</strong> hold flavour-niche positions (Portuguese flame-grilled; peri-peri) with modest scale. <strong>Domino's</strong> (720 stores) contests delivery occasions and value bundles rather than chicken directly.<sup class="cite"><a href="#src-sh26">[4]</a></sup> <strong>Subway</strong> (1,256 stores) has the largest footprint but a structurally different occasion set.<sup class="cite"><a href="#src-sh26">[4]</a></sup> The sharper medium-term threat is <strong>Wendy's</strong> (entered January 2025) and especially <strong>Popeyes</strong>, whose arrival would put a global fried-chicken specialist — with Yum!-benchmark economics — directly against KFC for the first time in decades.<sup class="cite"><a href="#src-statista">[8]</a></sup></p>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>Table 4.1 — Competitive set scorecard (latest available, 2025–26)</caption>
+        <thead><tr><th>Brand</th><th>Stores</th><th>Owner / structure</th><th>Scale signal</th><th>Value weapon</th><th>Threat to KFC</th></tr></thead>
+        <tbody>
+          <tr><td><b>McDonald's</b></td><td><b>1,078</b><sup class="cite"><a href="#src-sh26">[4]</a></sup></td><td>McDonald's Australia + licensees</td><td>23.2% of fast-food revenue; A$1bn expansion to 2027<sup class="cite"><a href="#src-br">[7]</a></sup></td><td>McSmart A$6.95–9.95 tiers; Loose Change<sup class="cite"><a href="#src-mcsmart">[11]</a></sup></td><td><span class="pill red">High</span>Scale, breakfast, app</td></tr>
+          <tr class="hl"><td><b>KFC</b></td><td><b>817</b><sup class="cite"><a href="#src-sh26">[4]</a></sup></td><td>Collins Foods (295), Yum! equity (~75) + independent franchisees (~425)<sup class="cite"><a href="#src-ar">[5]</a></sup></td><td>Collins segment A$1.24bn FY26, SSS +2.7%<sup class="cite"><a href="#src-ar">[5]</a></sup></td><td>Go Bucket A$4.95; Zinger Box A$14.95; feasts<sup class="cite"><a href="#src-kfcp">[16]</a></sup></td><td><span class="pill">—</span>Benchmark</td></tr>
+          <tr><td><b>Subway</b></td><td><b>1,256</b><sup class="cite"><a href="#src-sh26">[4]</a></sup></td><td>Franchised</td><td>Largest footprint, lower AUVs</td><td>Sub savers, footlong promos</td><td><span class="pill">Low</span>Different occasion</td></tr>
+          <tr><td><b>Domino's</b></td><td><b>720</b><sup class="cite"><a href="#src-sh26">[4]</a></sup></td><td>Domino's Pizza Enterprises</td><td>Delivery-occasion leader in pizza</td><td>Value range pizzas, bundles</td><td><span class="pill">Med</span>Delivery share</td></tr>
+          <tr><td><b>Hungry Jack's</b></td><td><b>489</b><sup class="cite"><a href="#src-sh26">[4]</a></sup></td><td>Competitive Foods (Cowin)</td><td>~12% of QSR spend<sup class="cite"><a href="#src-nature">[9]</a></sup></td><td>Penny Pinchers from A$3.00; Super Stunners A$9.15<sup class="cite"><a href="#src-hj">[12]</a></sup></td><td><span class="pill red">High</span>Value + chicken push</td></tr>
+          <tr><td><b>Red Rooster</b></td><td><b>325</b><sup class="cite"><a href="#src-sh26">[4]</a></sup></td><td>Craveable Brands</td><td>#2 chicken brand, suburban roast focus</td><td>Family meals, red's deals</td><td><span class="pill">Med</span>Direct chicken rival</td></tr>
+          <tr><td><b>Guzman y Gomez</b></td><td><b>~250 (AU)</b><sup class="cite"><a href="#src-gyg26">[13f]</a></sup></td><td>ASX:GYG, corp + franchise</td><td>AU-segment network sales A$1.17bn, comps +9.6%<sup class="cite"><a href="#src-gyg2">[13b]</a></sup></td><td>A$12 Chicken Mini Meal<sup class="cite"><a href="#src-gygmeal">[15]</a></sup></td><td><span class="pill red">High</span>Dayparts, drive-thru sites</td></tr>
+          <tr><td><b>Wendy's / Popeyes</b></td><td>Beachhead</td><td>US entrants (2025–)</td><td>Wendy's first store Jan 2025<sup class="cite"><a href="#src-statista">[8]</a></sup></td><td>New-brand trial promos</td><td><span class="pill">Watch</span>Popeyes = direct</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><span class="co-tag">So what</span>KFC's most dangerous competitors are no longer chicken brands. McDonald's and Hungry Jack's attack on price and ubiquity; GYG attacks on dayparts, drive-thru economics and freshness positioning. Defensive strategy must therefore be multi-front, not chicken-centric.</div>
+  </div>
+</section>
+
+<!-- ================= CH 5 PRICING ================= -->
+<section class="chapter rv" id="ch5">
+  <div class="ch-head"><span class="ch-num">05 /</span><h2 class="ch-title">Pricing &amp; the value war</h2></div>
+  <p class="ch-deck">Every major chain has rebuilt its value architecture since 2025. KFC's ladder starts higher than its burger rivals — by design, but with consequences.</p>
+  <div class="content">
+    <h3>5.1 &nbsp;The 2026 value ladder</h3>
+    <p>Cost-of-living pressure has made entry price points the industry's primary battleground. Hungry Jack's owns the bottom rung — a <strong>A$3.00 BBQ Cheeseburger</strong> and A$2.50 medium chips on its permanent Penny Pinchers menu.<sup class="cite"><a href="#src-hj">[12]</a></sup> McDonald's rebuilt its mid-tier on 1 July 2026 with McSmart at <strong>A$6.95 / A$7.95 / A$9.95</strong>.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup> KFC's entry architecture sits one rung up: the <strong>A$4.95 Go Bucket</strong> (chicken + chips) and A$3.75 sliders (A$2 on promotion), scaling through Crunch Bowls (A$9.45) and boxes to the <strong>A$14.95 Zinger Box</strong> and A$28.95–49.95 family feasts.<sup class="cite"><a href="#src-kfcp">[16]</a></sup><sup class="cite"><a href="#src-kfcp2">[16b]</a></sup> GYG's A$12 Chicken Mini Meal shows even premium brands now maintain a value outpost.<sup class="cite"><a href="#src-gygmeal">[15]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 5.1 — Flagship value offers across chains</span><span class="exhibit-src">Menu prices, 2025–26 · Frugal Feeds, KFC menu, GYG, McDonald's</span></div>
+      <div id="chart-ladder" class="chart tall"></div>
+    </div>
+
+    <h3>5.2 &nbsp;Reading KFC's price position</h3>
+    <p>KFC's structure reflects a deliberate choice: <strong>cede the sub-A$4 snack rung to the burger chains and defend the A$5 "real food with protein" rung</strong>, where the Go Bucket offers materially more food than a A$3 cheeseburger. Consumer data supports the positioning — KFC ties McDonald's at 60% on value-for-money perception despite higher entry prices, and leads decisively on food-quality drivers (76% best chips).<sup class="cite"><a href="#src-nature">[9]</a></sup> The risk is asymmetry in the family basket: HJ's Super Stunner (A$9.15) and McDonald's McSmart Meal (A$7.95) undercut KFC's boxes, pushing KFC's value defence toward multi-person feasts (Value Feast A$28.95) where chicken's sharing economics are strongest.<sup class="cite"><a href="#src-hj">[12]</a></sup><sup class="cite"><a href="#src-kfcp2">[16b]</a></sup></p>
+    <p>Two pricing dynamics deserve board attention. First, <strong>commodity deflation created room</strong>: Collins cited deflation in chicken and potato inputs through FY25–26 as a margin support, funding "investment in value for consumers" without further EBITDA erosion — that tailwind is flagged as flat-to-modest for FY27, meaning future value investment must come from productivity.<sup class="cite"><a href="#src-fy25">[10]</a></sup><sup class="cite"><a href="#src-quartr">[6]</a></sup> Second, <strong>channel price integrity</strong>: delivered menu prices run materially above in-store (DoorDash-listed HJ Whopper at A$11.75 vs A$9.50 in-store) and KFC's FY26 delivery fee-structure reset proved pricing architecture in delivery is now a managed P&amp;L lever, not an afterthought.<sup class="cite"><a href="#src-dd">[18]</a></sup><sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>Table 5.1 — KFC Australia core price architecture (July 2026)</caption>
+        <thead><tr><th>Tier</th><th>Item</th><th>Price (A$)</th><th>Strategic role</th></tr></thead>
+        <tbody>
+          <tr><td>Snack</td><td>Original Slider (promo A$2)</td><td><b>3.75</b><sup class="cite"><a href="#src-kfcp">[16]</a></sup></td><td>Entry trial, kids, add-on</td></tr>
+          <tr class="hl"><td>Entry meal</td><td>Go Bucket (5 variants)</td><td><b>4.95</b><sup class="cite"><a href="#src-kfcp">[16]</a></sup></td><td>Value anchor vs Macca's/HJ</td></tr>
+          <tr><td>Solo premium</td><td>Zinger Crunch Bowl / combo</td><td><b>9.45 / 13.95</b><sup class="cite"><a href="#src-kfcp">[16]</a></sup></td><td>Lunch daypart, freshness cue</td></tr>
+          <tr class="hl"><td>Signature box</td><td>Zinger Box (large A$17.45)</td><td><b>14.95</b><sup class="cite"><a href="#src-kfcp2">[16b]</a></sup></td><td>Hero bundled meal, app promos</td></tr>
+          <tr><td>Family</td><td>Value / Family / Giant Feast</td><td><b>28.95–49.95</b><sup class="cite"><a href="#src-kfcp2">[16b]</a></sup></td><td>Sharing economics, dinner daypart</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CH 6 CONSUMER & CHANNEL ================= -->
+<section class="chapter rv" id="ch6">
+  <div class="ch-head"><span class="ch-num">06 /</span><h2 class="ch-title">Consumer &amp; channel trends</h2></div>
+  <p class="ch-deck">A delivery duopoly is born, dayparts are the growth frontier, and digital has become the default ordering behaviour.</p>
+  <div class="content">
+    <h3>6.1 &nbsp;Delivery: the Menulog shock and the new duopoly</h3>
+    <p><strong>Menulog ceased Australian operations on 26 November 2025</strong> after 20 years, signing a commercial agreement to redirect its customers to Uber Eats.<sup class="cite"><a href="#src-menulog">[14]</a></sup><sup class="cite"><a href="#src-menulog2">[14b]</a></sup> Pre-exit shares were roughly <strong>Uber Eats 54%, Menulog 24%, DoorDash 15%</strong>; the market now resolves to an Uber Eats–DoorDash duopoly, with Uber the clear leader.<sup class="cite"><a href="#src-conv">[14c]</a></sup> Analysts warn of upward pressure on commissions and consumer prices, and reduced restaurant leverage; Simon-Kucher's Mitchell Taylor advises restaurants to respond with <strong>direct ordering, loyalty programs and white-label partnerships</strong> to retain control of pricing, data and promotions.<sup class="cite"><a href="#src-menulog2">[14b]</a></sup></p>
+    <p>For KFC the duopoly cuts both ways: platform concentration raises commission risk, but KFC is one of very few brands with enough volume to negotiate bespoke terms — and its FY26 delivery fee-structure reset already delivered SSS benefit.<sup class="cite"><a href="#src-ar">[5]</a></sup> A further wrinkle: the TWU's minimum-pay agreement with Uber Eats and DoorDash (November 2025) begins formalising gig-economy labour costs, likely firming delivery fees over time.<sup class="cite"><a href="#src-menulog">[14]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 6.1 — Delivery market shares at Menulog's exit</span><span class="exhibit-src">IBISWorld estimates via The Conversation, Nov 2025</span></div>
+      <div id="chart-delivery" class="chart"></div>
+    </div>
+
+    <h3>6.2 &nbsp;Dayparts: where the growth actually is</h3>
+    <p>The single most actionable consumer datum for KFC: <strong>breakfast and late-night together represented 36% of the Australian QSR market in 2025, growing at 7% and 11% respectively</strong> — the fastest-growing dayparts in the industry — and KFC is materially under-indexed in both.<sup class="cite"><a href="#src-ar">[5]</a></sup> McDonald's owns breakfast through McCafé; GYG is scaling 24/7 trading (23 restaurants) and cites after-9pm and breakfast as comp-growth drivers.<sup class="cite"><a href="#src-gygq">[13d]</a></sup><sup class="cite"><a href="#src-gyg3">[13e]</a></sup> KFC's response — the 16-restaurant Gold Coast breakfast trial and extended late-night hours from FY27 — is correctly aimed; the strategic question is speed and scale of rollout.<sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+
+    <h3>6.3 &nbsp;Digital behaviour and the trading-down consumer</h3>
+    <p>Digital ordering is now the default for a large minority of occasions: KFC Australia's digital mix hit 43.2% of sales in FY26.<sup class="cite"><a href="#src-ar">[5]</a></sup> GYG's owned-app share (19.5% of network sales) shows the prize in <em>owned</em> channels versus aggregator rails.<sup class="cite"><a href="#src-gyg2">[13b]</a></sup> Meanwhile the cost-of-living consumer is not disappearing from QSR — they are <strong>trading down into it</strong> from full-service dining, and then trading across menus toward bundles and app deals; Statista notes Australians "increasingly trade in pricier full-service dining experiences for traditionally cheaper QSR meals."<sup class="cite"><a href="#src-statista">[8]</a></sup> Nature frames the opportunity as a "lipstick effect": affordable small luxuries — exactly the KFC occasion.<sup class="cite"><a href="#src-nature">[9]</a></sup></p>
+    <div class="callout"><span class="co-tag">So what</span>The channel mix decision is now a board-level economic question: every point of sales shifted from aggregator delivery to owned app/kiosk preserves margin and first-party data. GYG's 19.5% owned-digital share is the benchmark to beat.</div>
+  </div>
+</section>
+
+<!-- ================= CH 7 COSTS ================= -->
+<section class="chapter rv" id="ch7">
+  <div class="ch-head"><span class="ch-num">07 /</span><h2 class="ch-title">Cost &amp; regulatory environment</h2></div>
+  <p class="ch-deck">Labour is the structural squeeze: three consecutive above-inflation award increases, plus rising compliance exposure on rostering and breaks.</p>
+  <div class="content">
+    <h3>7.1 &nbsp;Wages: a ratchet that only turns one way</h3>
+    <p>From 1 July 2026, modern award minimum wages rose <strong>4.75%</strong> and the National Minimum Wage rose 5.97% to <strong>A$26.44/hour (A$1,004.90/week)</strong> — the first time the weekly minimum has exceeded A$1,000.<sup class="cite"><a href="#src-fwc">[17]</a></sup><sup class="cite"><a href="#src-fwc2">[17b]</a></sup> This follows 3.5% (2025), 3.75% (2024) and 5.75% (2023) — a cumulative ~19% increase in the award floor over four years, concentrated in accommodation &amp; food services, one of the four sectors employing two-thirds of all award-reliant workers.<sup class="cite"><a href="#src-fwc">[17]</a></sup><sup class="cite"><a href="#src-fwc3">[17c]</a></sup><sup class="cite"><a href="#src-fwc4">[17d]</a></sup> The FWC is additionally phasing out the lowest C13 classification over three cycles, compressing junior/entry pay structures upward.<sup class="cite"><a href="#src-fwc2">[17b]</a></sup> Collins explicitly flags labour inflation as "elevated" in FY27 even as commodity inflation flattens.<sup class="cite"><a href="#src-quartr">[6]</a></sup></p>
+
+    <div class="exhibit">
+      <div class="exhibit-head"><span class="exhibit-tag">Exhibit 7.1 — National Minimum Wage and award increases</span><span class="exhibit-src">FWC Annual Wage Reviews 2023–2026</span></div>
+      <div id="chart-wages" class="chart"></div>
+    </div>
+
+    <h3>7.2 &nbsp;Compliance and other watch items</h3>
+    <p>Labour compliance is now a direct P&amp;L and reputational risk: Collins Foods settled a class action over 10-minute rest breaks in FY26 (A$7.3&nbsp;million impact within A$11.6&nbsp;million of non-trading items) alongside wage-compliance estimate changes.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-quartr">[6]</a></sup> The same FWC-union environment that produced the delivery minimum-pay deal will keep spotlighting QSR rostering.<sup class="cite"><a href="#src-menulog">[14]</a></sup> On inputs, Collins enjoyed deflation in chicken and potato costs through FY25–26 but guides to <strong>flat-to-modest commodity inflation in FY27</strong> — removing the tailwind that funded value investment.<sup class="cite"><a href="#src-fy25">[10]</a></sup><sup class="cite"><a href="#src-quartr">[6]</a></sup> Kilojoule menu-labelling (displayed across all KFC menu boards) continues to normalise nutrition transparency, favouring chains that can offer credible lighter formats such as KFC's Crunch Bowls.<sup class="cite"><a href="#src-kfcp">[16]</a></sup></p>
+  </div>
+</section>
+
+<!-- ================= CH 8 SWOT ================= -->
+<section class="chapter rv" id="ch8">
+  <div class="ch-head"><span class="ch-num">08 /</span><h2 class="ch-title">SWOT assessment</h2></div>
+  <div class="content">
+    <div class="swot">
+      <div class="s"><h5>Strengths</h5><ul>
+        <li><b>Brand-health leadership</b> — top QSR brand index, buzz, satisfaction, recommendation; 76% "best chips".<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-nature">[9]</a></sup></li>
+        <li><b>Scale economics</b> — 817 stores; Collins segment alone A$1.24bn revenue, A$237m EBITDA.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-sh26">[4]</a></sup></li>
+        <li><b>Digital momentum</b> — 43.2% of sales, app + kiosk + delivery flywheel.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+        <li><b>Protein position</b> — chicken category growing ahead of industry; strong family-sharing formats.<sup class="cite"><a href="#src-chicken">[3]</a></sup></li>
+        <li><b>Aligned franchise system</b> — Collins now pure-KFC after Taco Bell exit.<sup class="cite"><a href="#src-quartr">[6]</a></sup></li>
+      </ul></div>
+      <div class="w"><h5>Weaknesses</h5><ul>
+        <li><b>Daypart gaps</b> — under-indexed in breakfast and late-night (36% of market) vs McDonald's and GYG.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+        <li><b>Higher entry price</b> — A$4.95 floor vs HJ A$3.00 and Macca's Loose Change.<sup class="cite"><a href="#src-hj">[12]</a></sup></li>
+        <li><b>Margin drift</b> — EBITDA margin 19.8% → 19.1% over FY24–26 despite record sales.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+        <li><b>Aggregator dependence</b> — delivery growth rides duopoly rails with commission exposure.<sup class="cite"><a href="#src-menulog2">[14b]</a></sup></li>
+        <li><b>Labour compliance record</b> — rest-break class-action settlement.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+      </ul></div>
+      <div class="o"><h5>Opportunities</h5><ul>
+        <li><b>Daypart expansion</b> — breakfast +7%, late-night +11% growth; trials already committed.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+        <li><b>Kwench beverage platform</b> — national rollout FY27–28 creates a new category occasion.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+        <li><b>Owned-channel shift</b> — each point moved from aggregator to app/kiosk recaptures margin and data (GYG benchmark 19.5% owned).<sup class="cite"><a href="#src-gyg2">[13b]</a></sup></li>
+        <li><b>Network densification</b> — 7–10 builds/yr; drive-thru-only small formats extend reach.<sup class="cite"><a href="#src-quartr">[6]</a></sup><sup class="cite"><a href="#src-br">[7]</a></sup></li>
+        <li><b>Trading-down consumer</b> — QSR gaining occasions from full-service dining.<sup class="cite"><a href="#src-statista">[8]</a></sup></li>
+      </ul></div>
+      <div class="t"><h5>Threats</h5><ul>
+        <li><b>Escalating value war</b> — McSmart tiers and Penny Pinchers reset entry-price expectations.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup><sup class="cite"><a href="#src-hj">[12]</a></sup></li>
+        <li><b>Popeyes / Wendy's entry</b> — first direct global fried-chicken challenger in decades.<sup class="cite"><a href="#src-statista">[8]</a></sup></li>
+        <li><b>Labour cost ratchet</b> — 4.75% award rise FY27, C13 phase-out, gig minimum pay.<sup class="cite"><a href="#src-fwc">[17]</a></sup></li>
+        <li><b>Delivery duopoly pricing</b> — commission and fee pressure post-Menulog.<sup class="cite"><a href="#src-conv">[14c]</a></sup></li>
+        <li><b>GYG's daypart land-grab</b> — 24/7 expansion and a 100+ store Australian pipeline contesting sites and occasions.<sup class="cite"><a href="#src-gygq">[13d]</a></sup><sup class="cite"><a href="#src-gyg26">[13f]</a></sup></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CH 9 RECOMMENDATIONS ================= -->
+<section class="chapter rv" id="ch9">
+  <div class="ch-head"><span class="ch-num">09 /</span><h2 class="ch-title">Strategic recommendations</h2></div>
+  <p class="ch-deck">Six moves for FY27–FY29 — sequenced from defending the core to building new occasions.</p>
+  <div class="content">
+    <div class="rec"><div class="rn">1</div><div>
+      <h6>Win the daypart war at trial speed, not pilot speed</h6>
+      <p>Breakfast and late-night are 36% of the market and its fastest growers, and KFC is under-indexed in both.<sup class="cite"><a href="#src-ar">[5]</a></sup> The 16-store Gold Coast breakfast trial should be run as a <b>time-boxed scale decision</b> — predefined success gates (incremental transactions, cannibalisation, labour model) and a national go/no-go within 12 months — because McDonald's McCafé moat and GYG's 24/7 build-out mean the window to claim "chicken for breakfast/late-night" is finite.<sup class="cite"><a href="#src-gygq">[13d]</a></sup> Late-night hours extension is lower-risk and should precede breakfast nationally.</p>
+      <div class="kpi">KPI: daypart sales mix; incremental transactions per store; trial-to-decision cycle time.</div>
+    </div></div>
+    <div class="rec"><div class="rn">2</div><div>
+      <h6>Sharpen the value architecture without joining the sub-$4 race</h6>
+      <p>KFC's A$4.95 Go Bucket is the right anchor — a protein-led entry meal the burger chains cannot match at A$3 — but the mid-ladder has gaps against McSmart Meal (A$7.95) and HJ Super Stunner (A$9.15).<sup class="cite"><a href="#src-mcsmart">[11]</a></sup><sup class="cite"><a href="#src-hj">[12]</a></sup> Recommended: a permanent <b>A$7.95–8.95 solo bundle</b> (burger/wrap + chips + drink) to close the McSmart gap, keep sliders at promotional A$2 as the traffic spike, and make family feasts (from A$28.95) the loudly advertised centrepiece of dinner value, where chicken's per-person sharing economics beat every burger rival.<sup class="cite"><a href="#src-kfcp2">[16b]</a></sup></p>
+      <div class="kpi">KPI: value-perception tracker (close 1pt gap to HJ's 61%); mix of entry-tier transactions; feast attachment at dinner.</div>
+    </div></div>
+    <div class="rec"><div class="rn">3</div><div>
+      <h6>Rebalance digital toward owned channels before the duopoly reprices</h6>
+      <p>Post-Menulog, aggregator commissions have only one direction.<sup class="cite"><a href="#src-conv">[14c]</a></sup> KFC should set an explicit <b>owned-vs-aggregated target</b> within its 43.2% digital mix — GYG's 19.5% owned-app share proves the ceiling is high — using app-exclusive value (extend the McSmart-style app-only logic with Go Bucket bundles), loyalty mechanics, and white-label delivery to keep platform reach without platform economics.<sup class="cite"><a href="#src-gyg2">[13b]</a></sup><sup class="cite"><a href="#src-menulog2">[14b]</a></sup> Simultaneously, use KFC's scale to negotiate bespoke national terms with both platforms and A/B-test delivery-fee structures as Collins did successfully in FY26.<sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+      <div class="kpi">KPI: owned-channel % of digital sales; delivery contribution margin per order; app MAU and order frequency.</div>
+    </div></div>
+    <div class="rec"><div class="rn">4</div><div>
+      <h6>Build the labour-cost productivity engine now</h6>
+      <p>With award wages up ~19% cumulatively since 2023 and the C13 phase-out compressing entry rates, labour is the structural margin threat of the decade.<sup class="cite"><a href="#src-fwc">[17]</a></sup><sup class="cite"><a href="#src-fwc2">[17b]</a></sup> The answer is throughput per rostered hour: extend kiosks beyond the current 100+ restaurants, kitchen automation and AI-driven rostering to demand curves, and multi-skilling to cover daypart extensions without net-new labour hours. Embed <b>proactive compliance auditing</b> (breaks, rostering) as a control system — the FY26 class-action settlement shows the cost of getting this wrong.<sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+      <div class="kpi">KPI: sales per labour hour; kiosk order share; zero repeat compliance findings.</div>
+    </div></div>
+    <div class="rec"><div class="rn">5</div><div>
+      <h6>Densify the network with format flexibility</h6>
+      <p>McDonald's is spending A$1bn to be within five minutes of most Australians; convenience is its moat.<sup class="cite"><a href="#src-br">[7]</a></sup> KFC's counter is format elasticity: sustain the 7–10 build rate, prioritise <b>drive-thru and drive-thru-only formats on smaller footprints</b> (which fit infill sites HJ and Macca's can't use), and contest the same arterial sites GYG's 100+ store pipeline is chasing.<sup class="cite"><a href="#src-quartr">[6]</a></sup><sup class="cite"><a href="#src-br">[7]</a></sup><sup class="cite"><a href="#src-gyg26">[13f]</a></sup> Site selection should explicitly model cannibalisation of Red Rooster's shrinking suburban trade.<sup class="cite"><a href="#src-sh26">[4]</a></sup></p>
+      <div class="kpi">KPI: new-build cash-on-cash returns; % of population within 10-minute drive; drive-thru mix of new builds.</div>
+    </div></div>
+    <div class="rec"><div class="rn">6</div><div>
+      <h6>Fortify chicken leadership before Popeyes lands</h6>
+      <p>The best defence against a Popeyes entry is a pre-emptive quality-and-craveability gap: keep the FY25–26 innovation cadence (Zinger Banh Mi, Upside Down Double) with at least one <b>signature chicken moment per quarter</b>, protect the "best chips" and bone-in Original Recipe equities in media, and use Kwench to add a beverage occasion no entrant can copy on day one.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-statista">[8]</a></sup> Monitor Wendy's/Popeyes beachhead markets for consumer response and pre-position value offers in overlap trade zones.</p>
+      <div class="kpi">KPI: chicken-category share of traffic; brand index lead vs #2; entrant-market SSS differentials.</div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= CH 10 RISKS & SOURCES ================= -->
+<section class="chapter rv" id="ch10">
+  <div class="ch-head"><span class="ch-num">10 /</span><h2 class="ch-title">Risks, sources &amp; disclaimer</h2></div>
+  <div class="content">
+    <h3>10.1 &nbsp;Watch list — twelve months ahead</h3>
+    <ul class="tight">
+      <li><b>FY27 trading updates</b> — Collins' first-eight-weeks sales were +6.7% in Australia; watch whether momentum holds as value investment annualises.<sup class="cite"><a href="#src-rb">[1]</a></sup></li>
+      <li><b>McSmart performance</b> — whether McDonald's three-tier architecture (from 1 July 2026) pulls KFC's light users.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup></li>
+      <li><b>Aggregator pricing moves</b> — first commission or fee changes under the duopoly.<sup class="cite"><a href="#src-conv">[14c]</a></sup></li>
+      <li><b>Popeyes / Wendy's announcements</b> — site signings and franchise partners.<sup class="cite"><a href="#src-statista">[8]</a></sup></li>
+      <li><b>Breakfast trial readout</b> — Gold Coast results and rollout decision.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+      <li><b>Wage cycle</b> — FY28 Annual Wage Review submissions; C13 phase-out mechanics.<sup class="cite"><a href="#src-fwc2">[17b]</a></sup></li>
+    </ul>
+
+    <h3>10.2 &nbsp;Sources</h3>
+    <ol class="sources">
+      <li id="src-rb"><span class="snum">1</span><span>RetailBiz — <a href="https://www.retailbiz.com.au/latest-news/collins-foods-posts-record-fy26-profit-and-revenue/" target="_blank" rel="noopener">"Collins Foods posts record FY26 profit and revenue"</a> (3 Jul 2026)</span></li>
+      <li id="src-ibis"><span class="snum">2</span><span>IBISWorld — <a href="https://www.ibisworld.com/australia/market-size/fast-food-takeaway-food-services/2005/" target="_blank" rel="noopener">Fast Food &amp; Takeaway Food Services in Australia: Market Size 2026</a> (A$29.7bn, +0.3%)</span></li>
+      <li id="src-ibisb"><span class="snum">2b</span><span>IBISWorld — <a href="https://www.ibisworld.com/australia/industry/fast-food-takeaway-food-services/2005/" target="_blank" rel="noopener">Fast Food &amp; Takeaway Food Services Industry Analysis, May 2026</a> (28,219 businesses; 1.4% CAGR)</span></li>
+      <li id="src-chicken"><span class="snum">3</span><span>IBISWorld — <a href="https://www.ibisworld.com/australia/industry/takeaway-chicken-shops/5500/" target="_blank" rel="noopener">Takeaway Chicken Shops in Australia, Oct 2025</a> (A$6.3bn; 1,972 businesses; 2.8% CAGR)</span></li>
+      <li id="src-sh26"><span class="snum">4</span><span>ScrapeHero location reports, 2026 — <a href="https://www.scrapehero.com/location-reports/10-largest-food-chains-in-australia/" target="_blank" rel="noopener">10 Largest Food Chains in Australia (2026)</a> — brand store counts as of Feb–Jul 2026: Subway 1,256 (Feb); McDonald's 1,078 (Jul); KFC 817 (16 Jun); Domino's 720 (Mar); Hungry Jack's 489 (Jul); Red Rooster 325 (Jan)</span></li>
+      <li id="src-ir"><span class="snum">4b</span><span>Inside Retail — <a href="https://insideretail.com.au/news/kfc-opens-its-800th-store-in-australia-202409" target="_blank" rel="noopener">"KFC opens its 800th store in Australia"</a> (Sep 2024: Oran Park, Sydney; "fastest-growing QSR in Australia over the past six years")</span></li>
+      <li id="src-gap"><span class="snum">4c</span><span>GapMaps — <a href="https://www.gapmaps.com/fast-food-and-qsr-sector-records-strongest-growth-in-a-decade-adding-250-net-new-stores/" target="_blank" rel="noopener">2025 Annual Fast Food &amp; QSR Network Report</a> (Mar 2026: 12 months to 31 Dec 2025 — sector net +250 stores, strongest in a decade; net growth by brand: Zambrero +31, KFC +29, GYG +27, McDonald's +25, Subway +18, Oporto +17, Hungry Jack's +16, El Jannah +15, Nando's +10, Red Rooster −1; top-5 brands within 3km of 82% of Australians)</span></li>
+      <li id="src-ar"><span class="snum">5</span><span>Collins Foods — <a href="https://www.collinsfoods.com/wp-content/uploads/2026/06/CKF-Annual-Report-2026.pdf" target="_blank" rel="noopener">Annual Report 2026</a> (FY26: revenue A$1,241.3m, SSS +2.7%, EBITDA A$237.1m, digital 43.2%, 295 restaurants; daypart data; Kwench &amp; breakfast plans)</span></li>
+      <li id="src-quartr"><span class="snum">6</span><span>Quartr — <a href="https://quartr.com/events/collins-foods-limited-ckf-h2-2026_FkmZjwH8" target="_blank" rel="noopener">Collins Foods H2 2026 earnings summary</a> (30 Jun 2026: FY27 capex, 7–10 new restaurants, cost outlook, Taco Bell exit)</span></li>
+      <li id="src-br"><span class="snum">7</span><span>Burgess Rawson — <a href="https://www.burgessrawson.com.au/wp-content/uploads/2025/08/FF-Industry-Insights-Report-JUN-2025-DIGITAL.pdf" target="_blank" rel="noopener">Fast Food Industry Insights, Jun 2025</a> (McDonald's 23.2% share, A$1bn expansion; Euromonitor 32% growth forecast; outlet density; rents)</span></li>
+      <li id="src-statista"><span class="snum">8</span><span>Statista — <a href="https://www.statista.com/topics/11386/fast-food-restaurants-in-australia/" target="_blank" rel="noopener">Fast food restaurants in Australia — statistics &amp; facts</a> (Jun 2025: Wendy's entry Jan 2025; Popeyes etc.; trading-down behaviour)</span></li>
+      <li id="src-nature"><span class="snum">9</span><span>AdNews / Nature — <a href="https://www.adnews.com.au/news/the-secret-to-australia-s-most-loved-fast-food-brand" target="_blank" rel="noopener">"The secret to Australia's most loved fast food brand"</a> (2023: share of spend 54/22/12; chips 76%; value-for-money scores)</span></li>
+      <li id="src-fy25"><span class="snum">10</span><span>Collins Foods ASX release — <a href="https://announcements.asx.com.au/asxpdf/20250624/pdf/06l14ndk84xlpc.pdf" target="_blank" rel="noopener">Group Results FY25 and Outlook</a> (FY25: revenue A$1,154.2m, SSS +0.3%, EBITDA margin 19.3%, digital 34.2%; FY24 comparatives; input deflation)</span></li>
+      <li id="src-mcsmart"><span class="snum">11</span><span>Frugal Feeds — <a href="https://www.frugalfeeds.com.au/2026/mcdonalds-unveils-new-mcsmart-value-range-loose-change-menu-changes-starting-july-1/" target="_blank" rel="noopener">"McDonald's Unveils New McSmart Value Range… Starting July 1"</a> (Jun 2026: $6.95/$7.95/$9.95)</span></li>
+      <li id="src-hj"><span class="snum">12</span><span>Frugal Feeds — <a href="https://www.frugalfeeds.com.au/hungry-jacks-prices-menu/" target="_blank" rel="noopener">Hungry Jack's Menu Prices (July 2026)</a> (Penny Pinchers; Super Stunners; vouchers)</span></li>
+      <li id="src-gyg"><span class="snum">13</span><span>Proactive Investors — <a href="https://www.proactiveinvestors.com.au/companies/news/1077157/guzman-y-gomez-delivers-record-fy25-results-surpasses-1-billion-milestone-1077157.html" target="_blank" rel="noopener">"Guzman y Gomez delivers record FY25 results"</a> (Aug 2025)</span></li>
+      <li id="src-gyg2"><span class="snum">13b</span><span>Mi3 — <a href="http://www.mi-3.com.au/22-08-2025/guzman-y-gomez-surpasses-1bn-network-sales-chain-expands-global-footprint" target="_blank" rel="noopener">"GYG surpasses $1bn in network sales"</a> (Aug 2025: segment detail, restaurant counts, digital 19.5%)</span></li>
+      <li id="src-gygar"><span class="snum">13c</span><span>GYG — <a href="https://www.guzmanygomez.com.au/wp-content/uploads/2025/08/Guzman-y-Gomez-2025-Annual-Report.pdf" target="_blank" rel="noopener">2025 Annual Report</a> (drive-thru margin 22%, franchisee ROI 50%, 24/7 count)</span></li>
+      <li id="src-gygq"><span class="snum">13d</span><span>GYG ASX release — <a href="https://news.finclear.tradecentre.io/asx/document/20251009/03005492.pdf" target="_blank" rel="noopener">Q1 FY26 quarterly</a> (Oct 2025: 23 restaurants trading 24/7)</span></li>
+      <li id="src-gyg3"><span class="snum">13e</span><span>A Rich Life — <a href="https://arichlife.com.au/guzman-y-gomez-ltd-asx-gyg-fy25-results-investors-flee-as-growth-stumbles/" target="_blank" rel="noopener">GYG FY25 analysis</a> (daypart initiatives: after-9pm, 24/7, breakfast)</span></li>
+      <li id="src-gyg26"><span class="snum">13f</span><span>Morningstar — <a href="https://www.morningstar.com.au/stocks/investors-cheer-guzman-dialing-back-global-ambitions" target="_blank" rel="noopener">"Investors cheer Guzman dialing back global ambitions"</a> (25 May 2026: ~250 Australian restaurants, 32 FY26 openings, 100+ site pipeline, US exit, 1,000-store long-run ambition)</span></li>
+      <li id="src-menulog"><span class="snum">14</span><span>ABC News — <a href="https://www.abc.net.au/news/2025-11-25/menulog-uber-eats-commercial-agreement/106050600" target="_blank" rel="noopener">"Menulog signs agreement to send users to Uber Eats…"</a> (Nov 2025; TWU minimum-pay deal)</span></li>
+      <li id="src-menulog2"><span class="snum">14b</span><span>QSR Media — <a href="https://qsrmedia.com.au/food-services/exclusive/menulog-exits-australia-after-20-years-uber-doordash-dominate" target="_blank" rel="noopener">"Menulog exits Australia after 20 years…"</a> (Nov 2025: analyst commentary, duopoly implications)</span></li>
+      <li id="src-conv"><span class="snum">14c</span><span>The Conversation — <a href="https://theconversation.com/menulog-is-closing-in-australia-could-food-delivery-soon-cost-more-269602" target="_blank" rel="noopener">"Menulog is closing in Australia. Could food delivery soon cost more?"</a> (Nov 2025: IBISWorld shares 54/24/15)</span></li>
+      <li id="src-gygmeal"><span class="snum">15</span><span>GYG — <a href="https://www.guzmanygomez.com.au/our-12-chicken-mini-meal-now-on-menulog/" target="_blank" rel="noopener">"$12 Chicken Mini Meal"</a> (May 2025)</span></li>
+      <li id="src-kfcp"><span class="snum">16</span><span>KFC menu price guide — <a href="https://kfcmenuprice.au/" target="_blank" rel="noopener">KFC Menu with Prices (July 2026)</a> (Go Bucket $4.95; sliders $3.75; bowls; boxes)</span></li>
+      <li id="src-kfcp2"><span class="snum">16b</span><span>Frugal Feeds — <a href="https://www.frugalfeeds.com.au/kfc-prices-menu/" target="_blank" rel="noopener">KFC Menu Prices Australia (July 2026)</a> (Zinger Box $14.95; boxed meals; feasts)</span></li>
+      <li id="src-fwc"><span class="snum">17</span><span>ABC News — <a href="https://www.abc.net.au/news/2026-06-02/minimum-wage-increase-june-2026-australia/106746542" target="_blank" rel="noopener">"FWC annual ruling lifts minimum wage…"</a> (Jun 2026: +4.75% awards; NMW $26.44; sector concentration)</span></li>
+      <li id="src-fwc2"><span class="snum">17b</span><span>Squire Patton Boggs — <a href="https://www.squirepattonboggs.com/insights/publications/2026-annual-wage-review-decision-fwc-increases-the-national-minimum-wage-and-award-rates/" target="_blank" rel="noopener">2026 Annual Wage Review analysis</a> (C13 phase-out; NMW +5.97%)</span></li>
+      <li id="src-fwc3"><span class="snum">17c</span><span>Fair Work Ombudsman — <a href="https://www.fairwork.gov.au/about-us/workplace-laws/annual-wage-review/2023-2024-annual-wage-review" target="_blank" rel="noopener">2023–24 Annual Wage Review</a> (+3.75%, $24.10 from 1 Jul 2024)</span></li>
+      <li id="src-fwc4"><span class="snum">17d</span><span>FairWork Mate — <a href="https://fairworkmate.com.au/annual-wage-review/2024-25" target="_blank" rel="noopener">Annual Wage Review 2024-25 summary</a> (prior-year $23.23/hr; 2023's +5.75%)</span></li>
+      <li id="src-dd"><span class="snum">18</span><span>DoorDash — <a href="https://www.doordash.com/en/business/hungry-jacks-860686/menu" target="_blank" rel="noopener">Hungry Jack's delivery menu pricing</a> (delivery-vs-in-store price comparison)</span></li>
+    </ol>
+
+    <footer>
+      <p class="disc"><b>Disclaimer.</b> This report was prepared for general informational and discussion purposes only. It synthesises publicly available sources believed reliable as of 23 July 2026, but figures (including third-party market-size, share and menu-price data) may be revised by their publishers, and menu prices vary by location and channel. Nothing here constitutes investment, legal, accounting or other professional advice, nor an official position of KFC, Yum! Brands or Collins Foods. Verified decisions should use primary company disclosures and licensed market data.</p>
+      <p style="margin-top:16px">THE COLONEL'S BATTLEGROUND · AUSTRALIAN QSR DEEP RESEARCH · JULY 2026</p>
+    </footer>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ============ palette ============ */
+const RED='#c30000', NAVY='#26436b', CHAR='#2e3030', GOLD='#b08a2e', GREEN='#3f6d4e', GRAY='#b7ab97', LIGHT='#e5dcc9', INK='#211d19', MUT='#8b8172';
+const F="'Inter',sans-serif", FM="'IBM Plex Mono',monospace", FS="'Fraunces',serif";
+const base={
+  backgroundColor:'transparent',
+  textStyle:{fontFamily:F,color:INK},
+  title:{textStyle:{fontFamily:FS,fontSize:21,fontWeight:600,color:INK},subtextStyle:{fontFamily:F,fontSize:12.5,color:MUT},left:4,top:0},
+  grid:{left:10,right:30,top:86,bottom:36,containLabel:true},
+  tooltip:{trigger:'item',backgroundColor:'#fffdf7',borderColor:'#d9cfbc',textStyle:{color:INK,fontSize:12.5},extraCssText:'box-shadow:0 4px 18px rgba(0,0,0,.10);'},
+  legend:{bottom:0,textStyle:{fontFamily:FM,fontSize:11,color:'#4c463e'},itemWidth:14,itemHeight:9}
+};
+function mk(id,opt){const el=document.getElementById(id);if(!el)return;const c=echarts.init(el);c.setOption(Object.assign({},base,opt));window.addEventListener('resize',()=>c.resize());return c;}
+
+/* ---- 2.1 store counts ---- */
+const chains=['Subway',"McDonald's",'KFC',"Domino's",'Bakers Delight*',"Hungry Jack's",'Boost Juice*','Red Rooster','Pie Face*','Zambrero*'];
+const counts=[1256,1078,817,720,519,489,374,325,299,288];
+mk('chart-stores',{
+  title:{text:"Australia's largest QSR networks",subtext:'Locations, 2026 (Subway Feb · Domino’s Mar · KFC 16 Jun · McDonald’s & HJ Jul · Red Rooster Jan) · * Nov 2025 · ScrapeHero'},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+  xAxis:{type:'value',axisLabel:{fontFamily:FM,fontSize:11,color:MUT},splitLine:{lineStyle:{color:'#e9e0cf'}}},
+  yAxis:{type:'category',inverse:true,data:chains,axisLabel:{fontSize:13,color:INK,fontWeight:500},axisLine:{show:false},axisTick:{show:false}},
+  series:[{type:'bar',barWidth:20,
+    data:counts.map((v,i)=>({value:v,itemStyle:{color:chains[i]==='KFC'?RED:(["McDonald's","Hungry Jack's"].includes(chains[i])?CHAR:GRAY)}})),
+    label:{show:true,position:'right',fontFamily:FM,fontSize:12,fontWeight:600,color:INK},
+    markLine:{silent:true,symbol:'none',lineStyle:{color:RED,type:'dashed'},label:{fontFamily:FM,fontSize:10,color:RED,formatter:'KFC: 817'},data:[{xAxis:817}]}
+  }]
+});
+
+/* ---- 2.3 net store growth ---- */
+const grow=[['Zambrero',31],['KFC',29],['Guzman y Gomez',27],["McDonald's",25],['Sushi Hub',22],['Subway',18],['Oporto',17],["Hungry Jack's",16],['El Jannah',15],["Nando's",10],['Red Rooster',-1]];
+mk('chart-netgrowth',{
+  title:{text:'Net new stores in 2025 — strongest sector growth in a decade',subtext:'Top 36 QSR brands, 12 months to 31 Dec 2025 · sector net +250 (359 openings − 109 closures) · GapMaps'},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:p=>p[0].name+': '+(p[0].value>0?'+':'')+p[0].value+' net stores'},
+  grid:{left:10,right:70,top:86,bottom:20,containLabel:true},
+  xAxis:{type:'value',axisLabel:{fontFamily:FM,fontSize:11,color:MUT},splitLine:{lineStyle:{color:'#e9e0cf'}}},
+  yAxis:{type:'category',inverse:true,data:grow.map(g=>g[0]),axisLabel:{fontSize:12.5,color:INK},axisLine:{show:false},axisTick:{show:false}},
+  series:[{type:'bar',barWidth:17,
+    data:grow.map(g=>({value:g[1],itemStyle:{color:g[0]==='KFC'?RED:(g[1]<0?GOLD:(["McDonald's","Hungry Jack's"].includes(g[0])?CHAR:GRAY))}})),
+    label:{show:true,position:'right',fontFamily:FM,fontSize:12,fontWeight:600,color:INK,formatter:p=>(p.value>0?'+':'')+p.value}}]
+});
+
+/* ---- 2.2 share of spend ---- */
+mk('chart-share',{
+  title:{text:'Share of Australian QSR spend',subtext:'Consumer survey, 2023 — "share of spend" among QSR brands'},
+  tooltip:{formatter:'{b}: {c}% ({d}%)'},
+  legend:{orient:'vertical',right:10,top:'middle'},
+  series:[{type:'pie',radius:['46%','72%'],center:['38%','58%'],
+    label:{formatter:'{b}\n{c}%',fontFamily:FM,fontSize:12,color:INK},
+    itemStyle:{borderColor:'#fffdf7',borderWidth:3},
+    data:[
+      {name:"McDonald's",value:54,itemStyle:{color:CHAR}},
+      {name:'KFC',value:22,itemStyle:{color:RED}},
+      {name:"Hungry Jack's",value:12,itemStyle:{color:NAVY}},
+      {name:'All other QSR',value:12,itemStyle:{color:GRAY}}
+    ]}]
+});
+
+/* ---- 3.1 financials ---- */
+mk('chart-fin',{
+  title:{text:'KFC Australia (Collins Foods): FY24–FY26',subtext:'Revenue, same-store sales growth, underlying EBITDA margin'},
+  tooltip:{trigger:'axis'},
+  legend:{data:['Revenue (A$m)','Same-store sales growth','Underlying EBITDA margin']},
+  xAxis:{type:'category',data:['FY24','FY25','FY26'],axisLabel:{fontFamily:FM,fontSize:13,color:INK}},
+  yAxis:[
+    {type:'value',name:'A$m',min:0,max:1400,nameTextStyle:{fontFamily:FM,color:MUT},axisLabel:{fontFamily:FM,fontSize:11,color:MUT},splitLine:{lineStyle:{color:'#e9e0cf'}}},
+    {type:'value',name:'%',min:0,max:24,nameTextStyle:{fontFamily:FM,color:MUT},axisLabel:{formatter:'{value}%',fontFamily:FM,fontSize:11,color:MUT},splitLine:{show:false}}
+  ],
+  series:[
+    {name:'Revenue (A$m)',type:'bar',barWidth:64,data:[1121.0,1154.2,1241.3],itemStyle:{color:RED},label:{show:true,position:'top',fontFamily:FM,fontWeight:600,fontSize:12.5,formatter:v=>'$'+v.value.toLocaleString()+'m'}},
+    {name:'Same-store sales growth',type:'line',yAxisIndex:1,data:[3.8,0.3,2.7],lineStyle:{width:3,color:NAVY},itemStyle:{color:NAVY},symbolSize:10,label:{show:true,position:'top',fontFamily:FM,fontSize:11,formatter:'+{c}%',color:NAVY}},
+    {name:'Underlying EBITDA margin',type:'line',yAxisIndex:1,data:[19.8,19.3,19.1],lineStyle:{width:3,type:'dashed',color:GOLD},itemStyle:{color:GOLD},symbolSize:10,label:{show:true,position:'bottom',fontFamily:FM,fontSize:11,formatter:'{c}%',color:GOLD}}
+  ]
+});
+
+/* ---- 3.2 digital ---- */
+mk('chart-digital',{
+  title:{text:'Digital share of KFC Australia sales',subtext:'App + kiosk + delivery, % of total revenue'},
+  tooltip:{trigger:'axis',formatter:'{b}: {c}% of sales'},
+  xAxis:{type:'category',data:['FY24','FY25','FY26'],axisLabel:{fontFamily:FM,fontSize:13,color:INK}},
+  yAxis:{type:'value',max:50,axisLabel:{formatter:'{value}%',fontFamily:FM,fontSize:11,color:MUT},splitLine:{lineStyle:{color:'#e9e0cf'}}},
+  series:[{type:'bar',barWidth:84,
+    data:[{value:29.4,itemStyle:{color:GRAY}},{value:34.2,itemStyle:{color:'#d4665a'}},{value:43.2,itemStyle:{color:RED}}],
+    label:{show:true,position:'top',fontFamily:FM,fontSize:16,fontWeight:600,formatter:'{c}%',color:INK}}]
+});
+
+/* ---- 5.1 value ladder ---- */
+const offers=[
+  ['HJ Large Frozen Drink',2.00,CHAR],['HJ Medium Chips',2.50,CHAR],['HJ BBQ Cheeseburger',3.00,CHAR],
+  ['KFC Original Slider',3.75,RED],['HJ Chicken Royale',3.75,CHAR],['KFC Go Bucket',4.95,RED],
+  ["Macca's McSmart Saver (app)",6.95,NAVY],["Macca's McSmart Meal",7.95,NAVY],
+  ['HJ Cheeseburger Super Stunner (small)',9.15,CHAR],["Macca's McSmart Plus",9.95,NAVY],
+  ['GYG Chicken Mini Meal',12.00,GOLD],['KFC Zinger Box',14.95,RED]
+];
+mk('chart-ladder',{
+  title:{text:'The 2026 value ladder',subtext:'Flagship advertised value offers, national menu prices (A$)'},
+  tooltip:{trigger:'axis',axisPointer:{type:'shadow'},formatter:p=>p[0].name+': $'+p[0].value.toFixed(2)},
+  grid:{left:10,right:70,top:86,bottom:20,containLabel:true},
+  xAxis:{type:'value',max:17,axisLabel:{formatter:'${value}',fontFamily:FM,fontSize:11,color:MUT},splitLine:{lineStyle:{color:'#e9e0cf'}}},
+  yAxis:{type:'category',inverse:true,data:offers.map(o=>o[0]),axisLabel:{fontSize:12,color:INK},axisLine:{show:false},axisTick:{show:false}},
+  series:[{type:'bar',barWidth:17,data:offers.map(o=>({value:o[1],itemStyle:{color:o[2]}})),
+    label:{show:true,position:'right',fontFamily:FM,fontSize:12,fontWeight:600,color:INK,formatter:p=>'$'+p.value.toFixed(2)}}]
+});
+
+/* ---- 6.1 delivery ---- */
+mk('chart-delivery',{
+  title:{text:'Food delivery market at Menulog’s exit (Nov 2025)',subtext:'Approximate market share — the market now resolves to an Uber Eats / DoorDash duopoly'},
+  tooltip:{formatter:'{b}: {c}%'},
+  legend:{orient:'vertical',right:10,top:'middle'},
+  series:[{type:'pie',radius:['44%','70%'],center:['38%','58%'],
+    label:{formatter:'{b}\n{c}%',fontFamily:FM,fontSize:12,color:INK},
+    itemStyle:{borderColor:'#fffdf7',borderWidth:3},
+    data:[
+      {name:'Uber Eats',value:54,itemStyle:{color:GREEN}},
+      {name:'Menulog (exited)',value:24,itemStyle:{color:GRAY}},
+      {name:'DoorDash',value:15,itemStyle:{color:RED}},
+      {name:'Other',value:7,itemStyle:{color:LIGHT}}
+    ]}]
+});
+
+/* ---- 7.1 wages ---- */
+mk('chart-wages',{
+  title:{text:'The labour cost floor keeps rising',subtext:'National Minimum Wage ($/hr) and annual award increase (%), effective 1 July'},
+  tooltip:{trigger:'axis'},
+  legend:{data:['National Minimum Wage ($/hr)','Award wage increase (%)']},
+  xAxis:{type:'category',data:['2023','2024','2025','2026'],axisLabel:{fontFamily:FM,fontSize:13,color:INK}},
+  yAxis:[
+    {type:'value',min:20,max:28,axisLabel:{formatter:'${value}',fontFamily:FM,fontSize:11,color:MUT},splitLine:{lineStyle:{color:'#e9e0cf'}}},
+    {type:'value',min:0,max:8,axisLabel:{formatter:'{value}%',fontFamily:FM,fontSize:11,color:MUT},splitLine:{show:false}}
+  ],
+  series:[
+    {name:'National Minimum Wage ($/hr)',type:'bar',barWidth:64,data:[23.23,24.10,24.95,26.44],itemStyle:{color:CHAR},label:{show:true,position:'top',fontFamily:FM,fontWeight:600,fontSize:12.5,formatter:'${c}'}},
+    {name:'Award wage increase (%)',type:'line',yAxisIndex:1,data:[5.75,3.75,3.5,4.75],lineStyle:{width:3,color:RED},itemStyle:{color:RED},symbolSize:10,label:{show:true,position:'top',fontFamily:FM,fontSize:11,formatter:'+{c}%',color:RED}}
+  ]
+});
+
+/* ============ hero counters ============ */
+function animateCounters(){
+  document.querySelectorAll('.hstat .num').forEach(el=>{
+    const target=parseFloat(el.dataset.count), dec=parseInt(el.dataset.decimals||0);
+    const pre=el.dataset.prefix||'', suf=el.dataset.suffix||'';
+    const t0=performance.now(), dur=1400;
+    function tick(t){
+      const p=Math.min((t-t0)/dur,1), e=1-Math.pow(1-p,3), v=target*e;
+      el.textContent=pre+v.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g,',')+suf;
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+/* ============ scroll spy + progress + reveal ============ */
+const links=[...document.querySelectorAll('.rail a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const sel=document.getElementById('mobileSelect');
+function onScroll(){
+  const y=window.scrollY;
+  const h=document.documentElement.scrollHeight-innerHeight;
+  document.getElementById('progress').style.width=(y/h*100)+'%';
+  let cur=0;
+  secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<innerHeight*0.35)cur=i;});
+  links.forEach((a,i)=>a.classList.toggle('active',i===cur));
+  if(sel)sel.selectedIndex=cur+1;
+}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}}),{threshold:0.06});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+animateCounters();
+</script>
+</body>
+</html>
