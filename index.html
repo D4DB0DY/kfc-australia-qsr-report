@@ -297,3 +297,99 @@ footer li{padding:3px 0;border-bottom:1px dashed var(--line)}
     </div>
   </div>
 </footer>
+<script>
+// ---------- ticker ----------
+(function(){
+  const items=['Finger Lickin\' Good','817 restaurants','A$1.24bn FY26 revenue','43.2% digital mix','+29 net new stores in 2025','It\'s finger lickin\' good','#1 QSR brand index','36% of market is breakfast + late-night'];
+  const track=document.getElementById('tickerTrack');
+  let html='';
+  for(let r=0;r<2;r++){items.forEach(t=>{html+='<span>'+t+'</span><span class="sep">///</span>';});}
+  track.innerHTML=html;
+})();
+// ---------- navigation ----------
+const secs=[...document.querySelectorAll('section[id^=ch]')];
+const rail=document.getElementById('rail');
+const footLinks=document.getElementById('footLinks');
+const jump=document.getElementById('jump');
+const titles={'ch1':'Executive summary','ch2':'Market size & growth','ch3':'KFC Australia','ch4':'Competitive set','ch5':'Pricing & value','ch6':'Delivery & digital','ch7':'Consumer & costs','ch8':'SWOT','ch9':'Strategic moves','ch10':'What to watch'};
+const navLinks=[];
+secs.forEach((s,i)=>{
+  const a=document.createElement('a');
+  a.href='#'+s.id;
+  a.innerHTML='<span class="num">'+String(i+1).padStart(2,'0')+'</span><span>'+titles[s.id]+'</span>';
+  rail.insertBefore(a,rail.querySelector('.rail-foot'));
+  navLinks.push(a);
+  const li=document.createElement('li');
+  li.innerHTML='<a href="#'+s.id+'" style="color:inherit;text-decoration:none">'+String(i+1).padStart(2,'0')+' · '+titles[s.id]+'</a>';
+  footLinks.appendChild(li);
+  const o=document.createElement('option');o.value=s.id;o.textContent=String(i+1).padStart(2,'0')+' · '+titles[s.id];jump.appendChild(o);
+});
+jump.addEventListener('change',e=>{if(e.target.value){document.getElementById(e.target.value).scrollIntoView({behavior:'smooth'});e.target.value='';}});
+const spy=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){navLinks.forEach(a=>a.classList.remove('on'));const i=secs.indexOf(x.target);if(navLinks[i])navLinks[i].classList.add('on');}})},{rootMargin:'-30% 0px -60% 0px'});
+secs.forEach(s=>spy.observe(s));
+// ---------- reveals ----------
+const rv=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');rv.unobserve(x.target);}})},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>rv.observe(el));
+// ---------- progress ----------
+const prog=document.getElementById('progress');
+window.addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;prog.style.width=p+'%';},{passive:true});
+// ---------- counters ----------
+const cnt=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){cnt.unobserve(x.target);const el=x.target;const t=parseFloat(el.dataset.count);const dec=parseInt(el.dataset.dec||'0');const pre=el.dataset.prefix||'';const suf=el.dataset.suffix||'';const t0=performance.now();const dur=1400;
+  function step(now){const k=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-k,3);const v=t*e;el.textContent=pre+v.toFixed(dec)+suf;if(k<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);}})},{threshold:.4});
+document.querySelectorAll('[data-count]').forEach(el=>cnt.observe(el));
+// ---------- charts ----------
+const RED='#e4002b',NAVY='#26436b',GOLD='#b08a2e',GREEN='#3f6d4e',INK='#141414';
+const base={
+  textStyle:{fontFamily:'Inter,sans-serif'},
+  grid:{left:56,right:24,top:52,bottom:40},
+  tooltip:{trigger:'axis',backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12}},
+  legend:{textStyle:{fontSize:11,fontFamily:'IBM Plex Mono,monospace'},bottom:0,itemWidth:14,itemHeight:9},
+  color:[RED,NAVY,GOLD,GREEN]
+};
+function mk(id,opt){const el=document.getElementById(id);if(!el)return;const o=Object.assign({},base,opt);if(opt.legend)o.legend=Object.assign({},base.legend,opt.legend);const c=echarts.init(el);c.setOption(o);window.addEventListener('resize',()=>c.resize());return c;}
+const labelTop={show:true,position:'top',fontSize:11,fontFamily:'IBM Plex Mono,monospace',color:INK};
+// 2.1 store counts
+mk('c_counts',{
+  grid:{left:70,right:24,top:40,bottom:60},
+  xAxis:{type:'value',axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
+  yAxis:{type:'category',data:['Oporto','Mad Mex','Grill\'d','Zambrero','Red Rooster','Nando\'s','GYG','HJ\'s','Domino\'s','McDonald\'s','Subway','KFC'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK}},
+  series:[{type:'bar',data:[199,70,178,288,325,131,254,489,720,1078,1256,{value:817,itemStyle:{color:RED}}],itemStyle:{color:'#d8cfc0',borderColor:INK,borderWidth:1},barWidth:'58%',
+    label:{show:true,position:'right',fontSize:11,fontFamily:'IBM Plex Mono,monospace',color:INK,fontWeight:600},
+    markLine:{silent:true,symbol:'none',lineStyle:{color:RED,type:'dashed'},label:{formatter:'KFC 817',fontFamily:'IBM Plex Mono,monospace',fontSize:10,color:RED},data:[{xAxis:817}]}}]
+});
+// 2.2 net adds
+mk('c_grow',{
+  grid:{left:56,right:24,top:40,bottom:60},
+  xAxis:{type:'category',data:['KFC','GYG','McDonald\'s','Domino\'s','HJ\'s','Oporto','Red Rooster','Subway'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:10.5,interval:0,rotate:20}},
+  yAxis:{type:'value',name:'net stores',nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
+  series:[{type:'bar',data:[{value:29,itemStyle:{color:RED}},26,15,8,3,{value:-3,itemStyle:{color:'#8a8a8a'}},{value:-7,itemStyle:{color:'#8a8a8a'}},{value:-38,itemStyle:{color:'#8a8a8a'}}],itemStyle:{color:NAVY,borderColor:INK,borderWidth:1},barWidth:'55%',
+    label:{show:true,position:'top',fontSize:11,fontFamily:'IBM Plex Mono,monospace',color:INK,fontWeight:600,formatter:p=>(p.value>0?'+':'')+p.value}}]
+});
+// 3.1 Collins Foods
+mk('c_ckf',{
+  grid:{left:64,right:56,top:52,bottom:52},
+  legend:{data:['KFC AU revenue (A$m)','EBITDA margin %']},
+  xAxis:{type:'category',data:['FY20','FY21','FY22','FY23','FY24','FY25'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11}},
+  yAxis:[{type:'value',name:'A$m',nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
+    {type:'value',name:'%',min:12,max:22,nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{show:false}}],
+  series:[
+    {name:'KFC AU revenue (A$m)',type:'bar',data:[905.7,950.3,1019.4,1088.6,1090.9,1118.2],itemStyle:{color:RED,borderColor:INK,borderWidth:1},barWidth:'50%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>Math.round(p.value)}},
+    {name:'EBITDA margin %',type:'line',yAxisIndex:1,data:[20.4,20.2,18.1,17.0,17.7,18.6],lineStyle:{color:INK,width:2.5},itemStyle:{color:INK},symbol:'circle',symbolSize:7,label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:'{c}%'}}
+  ]
+});
+// 3.2 digital mix
+mk('c_digital',{
+  grid:{left:56,right:24,top:52,bottom:40},
+  tooltip:{trigger:'item',backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12}},
+  legend:{bottom:0},
+  series:[{type:'pie',radius:['46%','72%'],center:['50%','46%'],itemStyle:{borderColor:'#faf8f5',borderWidth:3},
+    label:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK,formatter:'{b}\n{d}%'},
+    data:[
+      {value:18.7,name:'KFC app / web (owned)',itemStyle:{color:RED}},
+      {value:11.3,name:'Kiosks',itemStyle:{color:NAVY}},
+      {value:13.2,name:'Aggregator delivery',itemStyle:{color:GOLD}},
+      {value:56.8,name:'Counter / drive-thru',itemStyle:{color:'#d8cfc0'}}
+    ]}]
+});
+</script>
