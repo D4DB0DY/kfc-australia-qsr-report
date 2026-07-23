@@ -565,3 +565,226 @@
 
 </main>
 </div>
+
+<script>
+/* ---------------- ticker ---------------- */
+(function(){
+  const items=['Finger Lickin\' Good','817 restaurants','A$1.24bn FY26 revenue','43.2% digital mix','+29 net new stores in 2025','It\'s finger lickin\' good','#1 QSR brand index','36% of market is breakfast + late-night'];
+  const track=document.getElementById('tickerTrack');
+  let html='';
+  for(let r=0;r<2;r++){items.forEach(t=>{html+='<span>'+t+'</span><span class="dot">●</span>';});}
+  track.innerHTML=html;
+})();
+
+/* ---------------- hero counters ---------------- */
+const counters=document.querySelectorAll('.hstat .num');
+const cio=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting)return;
+    cio.unobserve(en.target);
+    const el=en.target,end=parseFloat(el.dataset.count),dec=parseInt(el.dataset.decimals||0);
+    const pre=el.dataset.prefix||'',suf=el.dataset.suffix||'',dur=1400,t0=performance.now();
+    function step(t){const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+      el.textContent=pre+(end*e).toFixed(dec)+suf;
+      if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  });
+},{threshold:.4});
+counters.forEach(c=>cio.observe(c));
+
+/* ---------------- reveal on scroll ---------------- */
+const rio=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');rio.unobserve(en.target);}});
+},{threshold:.08,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el=>rio.observe(el));
+
+/* ---------------- rail scrollspy + progress ---------------- */
+const railLinks=[...document.querySelectorAll('.rail a')];
+const chapters=[...document.querySelectorAll('section.chapter')];
+const sio=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      railLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+en.target.id));
+    }
+  });
+},{rootMargin:'-38% 0px -55% 0px'});
+chapters.forEach(c=>sio.observe(c));
+const prog=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+},{passive:true});
+
+/* ---------------- charts ---------------- */
+const F_M='IBM Plex Mono',F_I='Inter';
+const KFC='#e4002b',KFC2='#f26d8d',INK='#141414',SOFT='#8b8172',GRID='#e9e2d6';
+const PAL=['#e4002b','#26436b','#b08a2e','#3f6d4e','#c96f2e','#7a4f9e'];
+const CHARTS=[];
+function chart(id,opt){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const c=echarts.init(el);
+  c.setOption(opt);
+  CHARTS.push(c);
+}
+window.addEventListener('resize',()=>CHARTS.forEach(c=>c.resize()));
+const tip={trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:INK,borderWidth:0,padding:[10,14],
+  textStyle:{color:'#fff',fontFamily:F_M,fontSize:12},confine:true};
+const leg={textStyle:{fontFamily:F_M,fontSize:11,color:'#4a4640'},itemWidth:14,itemHeight:9,top:0};
+const axl={fontFamily:F_M,fontSize:11,color:'#4a4640'};
+const grd={left:8,right:18,top:46,bottom:6,containLabel:true};
+
+/* 2.1 store counts — horizontal bars */
+chart('chart-stores',{
+  tooltip:Object.assign({},tip,{trigger:'item',formatter:'{b}: <b>{c}</b> restaurants'}),
+  grid:{left:8,right:60,top:16,bottom:6,containLabel:true},
+  xAxis:{type:'value',splitLine:{lineStyle:{color:GRID}},axisLabel:axl},
+  yAxis:{type:'category',inverse:true,
+    data:['Subway','McDonald\'s','KFC','Domino\'s','Hungry Jack\'s','Red Rooster','Zambrero','Guzman y Gomez','Oporto','Grill\'d','Nando\'s'],
+    axisLabel:Object.assign({},axl,{fontSize:12,color:INK}),axisTick:{show:false},axisLine:{lineStyle:{color:INK}}},
+  series:[{type:'bar',barWidth:'56%',
+    data:[
+      {value:1256,itemStyle:{color:'#cfc6b4'}},
+      {value:1078,itemStyle:{color:'#cfc6b4'}},
+      {value:817,itemStyle:{color:KFC}},
+      {value:720,itemStyle:{color:'#cfc6b4'}},
+      {value:489,itemStyle:{color:'#cfc6b4'}},
+      {value:325,itemStyle:{color:'#cfc6b4'}},
+      {value:288,itemStyle:{color:'#cfc6b4'}},
+      {value:250,itemStyle:{color:'#cfc6b4'}},
+      {value:199,itemStyle:{color:'#cfc6b4'}},
+      {value:178,itemStyle:{color:'#cfc6b4'}},
+      {value:131,itemStyle:{color:'#cfc6b4'}}
+    ],
+    label:{show:true,position:'right',fontFamily:F_M,fontSize:11.5,fontWeight:600,color:INK}}]
+});
+
+/* 2.2 share of spend — donut */
+chart('chart-share',{
+  tooltip:Object.assign({},tip,{trigger:'item',formatter:'{b}: <b>{c}%</b> of QSR spend'}),
+  legend:Object.assign({},leg,{orient:'vertical',right:'6%',top:'middle',icon:'circle'}),
+  series:[{type:'pie',radius:['42%','70%'],center:['34%','50%'],
+    label:{fontFamily:F_M,fontSize:12,color:INK,formatter:'{b}\n{c}%'},
+    labelLine:{lineStyle:{color:SOFT}},
+    data:[
+      {value:54,name:'McDonald\'s',itemStyle:{color:'#cfc6b4'}},
+      {value:22,name:'KFC',itemStyle:{color:KFC}},
+      {value:12,name:'Hungry Jack\'s',itemStyle:{color:'#a89e8a'}},
+      {value:12,name:'All others',itemStyle:{color:'#e7e0d2'}}
+    ]}],
+  graphic:[{type:'text',left:'30.5%',top:'46%',style:{text:'Share of\nQSR spend',textAlign:'center',fontFamily:'Archivo Black',fontSize:15,fill:INK,lineHeight:20}}]
+});
+
+/* 2.3 net new stores 2025 — diverging bars */
+chart('chart-netgrowth',{
+  tooltip:tip,grid:grd,
+  xAxis:{type:'category',data:['Zambrero','KFC','GYG','McDonald\'s','Subway','Oporto','Hungry Jack\'s','El Jannah','Nando\'s','Red Rooster'],
+    axisLabel:Object.assign({},axl,{interval:0,rotate:34}),axisTick:{show:false},axisLine:{lineStyle:{color:INK}}},
+  yAxis:{type:'value',name:'net new stores, 2025',nameTextStyle:{fontFamily:F_M,fontSize:11,color:SOFT},
+    splitLine:{lineStyle:{color:GRID}},axisLabel:axl},
+  series:[{type:'bar',barWidth:'55%',
+    data:[
+      {value:31,itemStyle:{color:'#cfc6b4'}},
+      {value:29,itemStyle:{color:KFC}},
+      {value:27,itemStyle:{color:'#cfc6b4'}},
+      {value:25,itemStyle:{color:'#cfc6b4'}},
+      {value:18,itemStyle:{color:'#cfc6b4'}},
+      {value:17,itemStyle:{color:'#cfc6b4'}},
+      {value:16,itemStyle:{color:'#cfc6b4'}},
+      {value:15,itemStyle:{color:'#cfc6b4'}},
+      {value:10,itemStyle:{color:'#cfc6b4'}},
+      {value:-1,itemStyle:{color:'#8b8172'}}
+    ],
+    label:{show:true,position:'top',fontFamily:F_M,fontSize:11,fontWeight:600,color:INK,formatter:p=>p.value>0?'+'+p.value:p.value},
+    markLine:{silent:true,symbol:'none',lineStyle:{color:INK,width:1},label:{show:false},data:[{yAxis:0}]}}]
+});
+
+/* 3.1 Collins fin — bars + margin line */
+chart('chart-fin',{
+  tooltip:tip,
+  legend:leg,grid:grd,
+  xAxis:{type:'category',data:['FY24','FY25','FY26'],axisLabel:Object.assign({},axl,{fontSize:12,color:INK}),axisTick:{show:false},axisLine:{lineStyle:{color:INK}}},
+  yAxis:[
+    {type:'value',name:'A$m',nameTextStyle:{fontFamily:F_M,fontSize:11,color:SOFT},splitLine:{lineStyle:{color:GRID}},axisLabel:axl},
+    {type:'value',name:'%',min:17,max:21,nameTextStyle:{fontFamily:F_M,fontSize:11,color:SOFT},splitLine:{show:false},axisLabel:axl}
+  ],
+  series:[
+    {name:'Revenue (A$m)',type:'bar',barWidth:'34%',data:[1090.9,1154.2,1241.3],
+     itemStyle:{color:KFC},label:{show:true,position:'top',fontFamily:F_M,fontSize:11.5,fontWeight:600,color:INK,formatter:p=>'$'+p.value.toLocaleString()+'m'}},
+    {name:'EBITDA margin %',type:'line',yAxisIndex:1,data:[19.8,19.3,19.1],
+     lineStyle:{color:INK,width:2.5},itemStyle:{color:INK},symbol:'circle',symbolSize:8,
+     label:{show:true,position:'top',distance:8,fontFamily:F_M,fontSize:11,color:INK,backgroundColor:'#faf8f5',padding:[2,6],borderColor:INK,borderWidth:1,formatter:'{c}%'}}
+  ]
+});
+
+/* 3.2 digital mix */
+chart('chart-digital',{
+  tooltip:Object.assign({},tip,{trigger:'item',formatter:'{b}: <b>{c}%</b> of sales'}),
+  legend:Object.assign({},leg,{top:0}),
+  series:[{type:'pie',radius:['38%','66%'],center:['50%','54%'],
+    label:{fontFamily:F_M,fontSize:12,color:INK,formatter:'{b}\n{c}%'},
+    labelLine:{lineStyle:{color:SOFT}},
+    data:[
+      {value:43.2,name:'Digital — app · kiosk · delivery',itemStyle:{color:KFC}},
+      {value:56.8,name:'Counter & drive-thru',itemStyle:{color:'#e7e0d2'}}
+    ]}],
+  graphic:[{type:'text',left:'center',top:'50%',style:{text:'43.2%\ndigital',textAlign:'center',fontFamily:'Archivo Black',fontSize:22,fill:KFC,lineHeight:26}}]
+});
+
+/* 5.1 value ladder — horizontal bars */
+chart('chart-ladder',{
+  tooltip:Object.assign({},tip,{trigger:'item',formatter:p=>p.name+': <b>$'+p.value.toFixed(2)+'</b>'}),
+  grid:{left:8,right:60,top:16,bottom:6,containLabel:true},
+  xAxis:{type:'value',max:18,splitLine:{lineStyle:{color:GRID}},axisLabel:Object.assign({},axl,{formatter:'${value}'})},
+  yAxis:{type:'category',inverse:true,
+    data:['HJ BBQ Cheeseburger','HJ Chicken Royale','KFC Go Bucket','Macca\'s McSmart Saver','Macca\'s McSmart Meal','HJ Super Stunner (M)','Macca\'s McSmart Plus','GYG Chicken Mini Meal','KFC Zinger Box','KFC Zinger Box (large)'],
+    axisLabel:Object.assign({},axl,{fontSize:11.5,color:INK}),axisTick:{show:false},axisLine:{lineStyle:{color:INK}}},
+  series:[{type:'bar',barWidth:'58%',
+    data:[
+      {value:3.00,itemStyle:{color:'#cfc6b4'}},
+      {value:3.75,itemStyle:{color:'#cfc6b4'}},
+      {value:4.95,itemStyle:{color:KFC}},
+      {value:6.95,itemStyle:{color:'#cfc6b4'}},
+      {value:7.95,itemStyle:{color:'#cfc6b4'}},
+      {value:9.15,itemStyle:{color:'#cfc6b4'}},
+      {value:9.95,itemStyle:{color:'#cfc6b4'}},
+      {value:12.00,itemStyle:{color:'#cfc6b4'}},
+      {value:14.95,itemStyle:{color:KFC}},
+      {value:17.45,itemStyle:{color:KFC}}
+    ],
+    label:{show:true,position:'right',fontFamily:F_M,fontSize:11.5,fontWeight:600,color:INK,formatter:p=>'$'+p.value.toFixed(2)}}]
+});
+
+/* 6.1 delivery shares */
+chart('chart-delivery',{
+  tooltip:Object.assign({},tip,{trigger:'item',formatter:'{b}: <b>{c}%</b>'}),
+  legend:Object.assign({},leg,{orient:'vertical',right:'4%',top:'middle',icon:'circle'}),
+  series:[{type:'pie',radius:['36%','64%'],center:['34%','50%'],
+    label:{fontFamily:F_M,fontSize:12,color:INK,formatter:'{b}\n{c}%'},
+    labelLine:{lineStyle:{color:SOFT}},
+    data:[
+      {value:54,name:'Uber Eats',itemStyle:{color:INK}},
+      {value:24,name:'Menulog (exited Nov 2025)',itemStyle:{color:'#cfc6b4'}},
+      {value:15,name:'DoorDash',itemStyle:{color:KFC}},
+      {value:7,name:'Others',itemStyle:{color:'#e7e0d2'}}
+    ]}],
+  graphic:[{type:'text',left:'29%',top:'46%',style:{text:'Pre-exit\nshares',textAlign:'center',fontFamily:'Archivo Black',fontSize:14,fill:INK,lineHeight:18}}]
+});
+
+/* 7.1 wages — line */
+chart('chart-wages',{
+  tooltip:Object.assign({},tip,{valueFormatter:v=>'$'+v.toFixed(2)+'/hr'}),
+  grid:grd,
+  xAxis:{type:'category',data:['Jul 2023','Jul 2024','Jul 2025','Jul 2026'],boundaryGap:false,
+    axisLabel:Object.assign({},axl,{fontSize:12,color:INK}),axisLine:{lineStyle:{color:INK}},axisTick:{show:false}},
+  yAxis:{type:'value',min:22.5,max:27,name:'National Minimum Wage (A$/hr)',nameTextStyle:{fontFamily:F_M,fontSize:11,color:SOFT},
+    splitLine:{lineStyle:{color:GRID}},axisLabel:Object.assign({},axl,{formatter:'${value}'})},
+  series:[{name:'NMW',type:'line',data:[23.23,24.10,24.95,26.44],smooth:.25,
+    lineStyle:{color:KFC,width:3.5},itemStyle:{color:KFC,borderColor:'#fff',borderWidth:2},symbol:'circle',symbolSize:11,
+    areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(228,0,43,.16)'},{offset:1,color:'rgba(228,0,43,0)'}]}},
+    label:{show:true,position:'top',fontFamily:F_M,fontSize:11.5,fontWeight:600,color:INK,formatter:p=>'$'+p.value.toFixed(2)}}],
+  graphic:[{type:'text',right:70,top:80,style:{text:'+13.8% over three years',fontFamily:F_M,fontSize:11.5,fill:SOFT}}]
+});
+</script>
+</body>
+</html>
