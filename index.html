@@ -3,447 +3,215 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Australian QSR Deep-Dive — KFC Australia Strategy Support</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+<title>The Colonel's Battleground — Australian QSR Industry Deep Research for KFC Australia</title>
+<meta name="description" content="Deep research on Australia's quick service restaurant industry: competitive set, pricing, consumer trends and strategic recommendations for KFC Australia leadership.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
 <style>
-:root{--kfc-red:#e4002b;--kfc-deep:#a3001e;--ink:#141414;--ink-soft:#3a3a3a;--paper:#faf8f5;--cream:#f2ede3;--white:#ffffff;--line:#e3dccd;--navy:#26436b;--gold:#b08a2e;--green:#3f6d4e}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
-.serif{font-family:'Fraunces',Georgia,serif}
-.mono{font-family:'IBM Plex Mono',monospace}
-.stripe-bar{height:14px;border-bottom:2px solid var(--ink)}
-.stripes{background:repeating-linear-gradient(180deg,var(--kfc-red) 0 15%,var(--white) 15% 30%)}
-.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:14px;padding:12px clamp(18px,3vw,36px);background:var(--paper);border-bottom:2px solid var(--ink)}
-.topbar .mark{width:38px;height:38px;flex:none}
-.topbar .wordmark{font-family:'Archivo Black',sans-serif;font-size:17px;letter-spacing:.08em;text-transform:uppercase}
-.topbar .wordmark .k{color:var(--kfc-red)}
-.topbar .meta{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.04em;text-transform:uppercase}
-.hero{position:relative;overflow:hidden;padding:clamp(40px,5vw,72px) clamp(22px,4.5vw,72px) clamp(48px,6vw,80px);border-bottom:2px solid var(--ink)}
-.hero-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto}
-.hero-kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--kfc-red);margin-bottom:22px;display:flex;align-items:center;gap:12px}
-.hero-kicker::before{content:"";width:44px;height:2px;background:var(--kfc-red)}
-.hero-title{font-family:'Archivo Black',sans-serif;font-size:clamp(40px,5.6vw,84px);line-height:.98;letter-spacing:-.005em;text-transform:uppercase;max-width:16ch}
-.hero-title .red{color:var(--kfc-red)}
-.hero-sub{margin-top:26px;max-width:56ch;font-size:clamp(15px,1.35vw,18px);color:var(--ink-soft)}
-.hero-bucket{position:absolute;right:clamp(10px,5vw,90px);top:50%;transform:translateY(-50%);width:min(88%,440px);max-width:34vw;margin-right:clamp(10px,3vw,70px);z-index:0;pointer-events:none}
-.hero-bucket .halo{position:absolute;inset:-12%;border-radius:50%;background:repeating-conic-gradient(var(--kfc-red) 0 12deg,var(--white) 12deg 24deg);animation:spin 40s linear infinite;z-index:0}
-.hero-bucket img{position:relative;z-index:1;width:100%;filter:drop-shadow(0 34px 44px rgba(20,0,0,.35))}
-@keyframes spin{to{transform:rotate(360deg)}}
-.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:2px;margin-top:44px;border:2px solid var(--ink);background:var(--ink);max-width:820px}
-.hero-stat{background:var(--white);padding:16px 18px}
-.hero-stat .n{font-family:'Archivo Black',sans-serif;font-size:26px;color:var(--kfc-red)}
-.hero-stat .l{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
-.ticker{background:var(--ink);color:var(--white);overflow:hidden;border-bottom:2px solid var(--ink)}
-.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:tick 30s linear infinite}
-.ticker span{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:10px 0}
-.ticker .sep{color:var(--kfc-red);padding:10px 18px}
-@keyframes tick{to{transform:translateX(-50%)}}
-.shell{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1180px;margin:0 auto;padding:0 clamp(22px,4.5vw,72px);gap:clamp(28px,3.5vw,56px)}
-.rail{position:sticky;top:76px;align-self:start;padding:34px 0;height:calc(100vh - 76px);overflow:auto}
-.rail::-webkit-scrollbar{width:0}
-.rail-title{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--kfc-red);margin-bottom:16px}
-.rail a{display:flex;gap:10px;align-items:baseline;padding:7px 0;color:var(--ink-soft);text-decoration:none;font-size:13px;font-weight:500;border-left:2px solid var(--line);padding-left:12px;transition:all .18s}
-.rail a .num{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--kfc-red);min-width:22px}
-.rail a:hover{color:var(--ink);border-left-color:var(--kfc-red)}
-.rail a.on{color:var(--ink);border-left-color:var(--kfc-red);font-weight:700}
-.rail-foot{margin-top:28px;border-top:1px solid var(--line);padding-top:16px}
-.rail-foot .mini-stripes{height:36px;border:2px solid var(--ink);margin-bottom:12px}
-.rail-foot p{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-soft);letter-spacing:.04em}
-main{min-width:0;padding:34px 0 90px}
-section{margin-bottom:74px;scroll-margin-top:90px}
-.sec-head{display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:26px}
-.sec-num{font-family:'Archivo Black',sans-serif;font-size:30px;color:var(--kfc-red)}
-.sec-title{font-family:'Archivo Black',sans-serif;font-size:clamp(19px,2vw,25px);text-transform:uppercase;letter-spacing:.02em}
-.sec-sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);margin-left:auto;text-transform:uppercase;letter-spacing:.06em}
-p{margin-bottom:14px;font-size:14.5px;color:#2b2b2b}
-p.lede{font-family:'Fraunces',Georgia,serif;font-size:19px;line-height:1.55;color:var(--ink);margin-bottom:18px}
-.card{background:var(--white);border:2px solid var(--ink);padding:20px 22px;margin:22px 0}
-.card h4{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;color:var(--ink)}
-.card h4 .tag{color:var(--kfc-red);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;margin-right:8px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
-caption{caption-side:top;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--kfc-red);padding-bottom:8px}
-th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:9px 10px;background:var(--cream);border-bottom:2px solid var(--ink);color:var(--ink)}
-td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-tr:hover td{background:#fbf6ef}
-.kfc-row td{background:#fdeef1;font-weight:600}
-.kfc-row td:first-child{color:var(--kfc-red)}
-.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.up{color:var(--green);font-weight:600}
-.dn{color:var(--kfc-red);font-weight:600}
-.chart{width:100%;height:340px;margin:6px 0 4px}
-.chart-note{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:8px;margin-top:6px}
-.callout{border-left:4px solid var(--kfc-red);background:var(--cream);padding:16px 20px;margin:22px 0}
-.callout .ct{font-family:'Archivo Black',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--kfc-red);margin-bottom:6px}
-.callout p{font-family:'Fraunces',Georgia,serif;font-size:15.5px;color:var(--ink);margin-bottom:0}
-.quote{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:16.5px;color:var(--ink);border-left:4px solid var(--ink);padding:4px 0 4px 18px;margin:20px 0}
-.quote .who{display:block;font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:10.5px;color:var(--ink-soft);margin-top:8px;text-transform:uppercase;letter-spacing:.08em}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
-.chip{font-family:'IBM Plex Mono',monospace;font-size:11px;border:1.5px solid var(--ink);padding:5px 12px;background:var(--white);text-transform:uppercase;letter-spacing:.04em}
-.chip.hot{background:var(--kfc-red);color:var(--white);border-color:var(--kfc-red)}
-.chip.ok{background:var(--ink);color:var(--white)}
-.comp-fig{margin:34px 0;border:2px solid var(--ink);background:var(--white)}
-.comp-fig img{width:100%;height:280px;object-fit:cover;display:block}
-.comp-fig figcaption{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:10px 14px;border-top:2px solid var(--ink);background:var(--cream)}
-.band-red{background:var(--kfc-red);color:var(--white);margin:64px calc(-1*clamp(22px,4.5vw,72px));padding:44px clamp(22px,4.5vw,72px);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
-.band-red .bt{font-family:'Archivo Black',sans-serif;font-size:clamp(20px,2.4vw,30px);text-transform:uppercase;max-width:26ch;line-height:1.15}
-.band-red .bp{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:14px;opacity:.85}
-footer{border-top:2px solid var(--ink);padding:34px clamp(22px,4.5vw,72px) 54px;background:var(--cream)}
-footer .stripe-bar{border-bottom:none;border-top:2px solid var(--ink);margin:0 calc(-1*clamp(22px,4.5vw,72px)) 26px}
-.foot-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr;gap:34px}
-footer h5{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;color:var(--kfc-red)}
-footer p,footer li{font-size:12.5px;color:var(--ink-soft)}
-footer ul{list-style:none}
-footer li{padding:3px 0;border-bottom:1px dashed var(--line)}
-.src{font-size:11.5px;color:var(--ink-soft);margin-top:16px;line-height:1.7}
-.src b{color:var(--ink)}
-.mobilenav{display:none}
-@media(max-width:980px){.shell{grid-template-columns:1fr}.rail{display:none}.mobilenav{display:block;position:sticky;top:62px;z-index:99;background:var(--paper);border-bottom:2px solid var(--ink);padding:10px clamp(18px,4vw,28px)}.mobilenav select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:9px;border:2px solid var(--ink);background:var(--white);text-transform:uppercase}.grid2,.grid3{grid-template-columns:1fr}.hero-bucket{display:none}.foot-grid{grid-template-columns:1fr}.topbar .meta{display:none}.band-red{margin:64px -22px;padding:36px 22px}}
-.rv{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
-.rv.in{opacity:1;transform:none}
-#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--kfc-red);z-index:200}
+  :root{
+    --kfc-red:#e4002b;
+    --kfc-deep:#a3001e;
+    --ink:#141414;
+    --ink-soft:#4a4640;
+    --muted:#8b8172;
+    --paper:#faf8f5;
+    --cream:#f2ede3;
+    --line:#e3dccd;
+    --white:#ffffff;
+    --navy:#26436b;
+    --gold:#b08a2e;
+    --green:#3f6d4e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',-apple-system,'Segoe UI',sans-serif;
+    font-size:16px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--kfc-red);color:#fff}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+  .serif{font-family:'Fraunces',Georgia,serif}
+
+  /* ---------- stripes ---------- */
+  .stripes{background:repeating-linear-gradient(180deg,var(--kfc-red) 0 15%,var(--white) 15% 30%)}
+  .stripes-v{background:repeating-linear-gradient(90deg,var(--kfc-red) 0 50%,var(--white) 50% 100%);background-size:72px 100%}
+  .stripe-bar{height:52px}
+
+  /* ---------- top bar ---------- */
+  .topbar{position:relative;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px clamp(20px,4vw,52px);background:var(--white);border-bottom:2px solid var(--ink)}
+  .brandmark{display:flex;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.12em;color:var(--ink);text-decoration:none}
+  .brandmark .colonel{width:34px;height:34px;flex-shrink:0}
+  .topbar .meta{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;background:var(--cream);
+    padding:clamp(40px,5vw,72px) clamp(20px,4vw,52px) 0;
+    overflow:hidden;border-bottom:2px solid var(--ink);
+  }
+  .hero-inner{position:relative;z-index:2;max-width:1440px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:center}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--kfc-red);display:inline-flex;align-items:center;gap:10px;font-weight:600}
+  .kicker::before{content:"";width:34px;height:2px;background:var(--kfc-red)}
+  h1.hero-title{font-family:'Archivo Black','Fraunces',sans-serif;font-size:clamp(40px,5.6vw,84px);line-height:.97;letter-spacing:-.005em;margin:26px 0 24px;text-transform:uppercase;color:var(--ink)}
+  h1.hero-title .red{color:var(--kfc-red)}
+  .hero-sub{font-size:clamp(16px,1.5vw,19px);color:var(--ink-soft);max-width:600px;line-height:1.62;margin-bottom:40px}
+  .hero-bucket{position:relative;justify-self:center;width:min(88%,440px);margin-right:clamp(0px,3vw,48px)}
+  .hero-bucket .halo{position:absolute;inset:-12%;border-radius:50%;background:repeating-conic-gradient(var(--kfc-red) 0 12deg,var(--white) 12deg 24deg);animation:spin 40s linear infinite;z-index:0}
+  .hero-bucket img{position:relative;z-index:1;width:100%;filter:drop-shadow(0 34px 44px rgba(20,0,0,.35))}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hero-stats{position:relative;z-index:2;max-width:1440px;margin:40px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));border-top:2px solid var(--ink)}
+  .hstat{padding:22px 22px 26px 0;border-right:1px solid var(--line);margin-right:22px}
+  .hstat:last-child{border-right:none}
+  .hstat .num{font-family:'Archivo Black','Fraunces',sans-serif;font-size:clamp(30px,3vw,44px);line-height:1.05;color:var(--ink)}
+  .hstat .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:9px;line-height:1.5}
+  @media (max-width:900px){.hero-inner{grid-template-columns:1fr}.hero-bucket{width:min(72vw,380px);margin-top:8px}}
+
+  /* ---------- ticker ---------- */
+  .ticker{background:var(--ink);color:var(--white);overflow:hidden;border-bottom:2px solid var(--ink)}
+  .ticker-track{display:flex;gap:0;white-space:nowrap;width:max-content;animation:tick 30s linear infinite}
+  .ticker span{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.18em;text-transform:uppercase;padding:14px 0}
+  .ticker .dot{color:var(--kfc-red);padding:14px 22px}
+  @keyframes tick{to{transform:translateX(-50%)}}
+
+  /* ---------- layout with chapter rail ---------- */
+  .shell{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1440px;margin:0 auto}
+  nav.rail{position:sticky;top:0;height:100vh;overflow-y:auto;padding:48px 26px 40px 38px;border-right:1px solid var(--line);background:var(--paper)}
+  .rail-head{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+  .rail a{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--ink-soft);padding:9px 0;font-size:13.5px;line-height:1.35;transition:color .2s}
+  .rail a .idx{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);min-width:22px;transition:color .2s}
+  .rail a:hover{color:var(--ink)}
+  .rail a.active{color:var(--kfc-red);font-weight:600}
+  .rail a.active .idx{color:var(--kfc-red)}
+  .rail-foot{margin-top:32px}
+  .rail-foot .mini-stripes{display:grid;grid-template-columns:repeat(5,10px);gap:5px;margin-bottom:14px}
+  .rail-foot .mini-stripes i{height:34px;background:var(--kfc-red)}
+  .rail-foot .mini-stripes i:nth-child(even){background:var(--ink)}
+  .rail-foot p{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.06em}
+
+  main{padding:0 clamp(22px,4.5vw,72px) 120px;min-width:0}
+  section.chapter{padding-top:76px;scroll-margin-top:10px}
+  .ch-head{display:flex;align-items:baseline;gap:20px;border-bottom:3px solid var(--kfc-red);padding-bottom:18px;margin-bottom:38px;flex-wrap:wrap}
+  .ch-num{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.1em;color:var(--kfc-red)}
+  .ch-title{font-family:'Archivo Black','Fraunces',sans-serif;font-size:clamp(28px,3.4vw,46px);line-height:1.04;letter-spacing:-.005em;text-transform:uppercase}
+  .ch-deck{font-size:17px;color:var(--ink-soft);max-width:760px;margin:-18px 0 34px}
+  .content{max-width:780px}
+  h3{font-family:'Fraunces',serif;font-size:23px;font-weight:600;margin:44px 0 14px;line-height:1.25}
+  h4{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--kfc-red);margin:34px 0 12px;font-weight:600}
+  p{margin-bottom:18px;color:var(--ink-soft)}
+  p strong,li strong{color:var(--ink)}
+  .lead{font-size:19px;line-height:1.7;color:var(--ink)}
+  ul.tight{margin:0 0 20px 22px}
+  ul.tight li{margin-bottom:10px;color:var(--ink-soft)}
+  sup.cite{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500}
+  sup.cite a{color:var(--kfc-red);text-decoration:none;padding:0 1px}
+  sup.cite a:hover{text-decoration:underline}
+
+  .callout{border-left:4px solid var(--kfc-red);background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:20px 26px;margin:30px 0;font-size:15.5px;color:var(--ink)}
+  .callout .co-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--kfc-red);display:block;margin-bottom:8px;font-weight:600}
+
+  .exhibit{margin:52px calc(-1 * clamp(0px,2vw,28px));padding:34px clamp(20px,3vw,44px);background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .exhibit-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .exhibit-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--kfc-red);font-weight:600}
+  .exhibit-src{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em}
+  .chart{width:100%;height:460px}
+  .chart.tall{height:520px}
+  @media (max-width:760px){.chart{height:380px}.chart.tall{height:440px}}
+
+  /* red band break */
+  .band-red{background:var(--kfc-red);color:var(--white);margin:64px calc(-1 * clamp(22px,4.5vw,72px));padding:44px clamp(22px,4.5vw,72px);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+  .band-red .br-k{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;opacity:.85;margin-bottom:14px;font-weight:600}
+  .band-red .br-t{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,2.6vw,34px);line-height:1.15;text-transform:uppercase;max-width:900px}
+  .band-red .br-s{margin-top:14px;font-size:14.5px;opacity:.92;max-width:760px;line-height:1.6}
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--kfc-red);z-index:200;transition:width .12s linear}
+
+  .tbl-wrap{overflow-x:auto;margin:34px 0;border-top:3px solid var(--ink)}
+  table{width:100%;border-collapse:collapse;font-size:13.8px;min-width:680px}
+  caption{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 0}
+  th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;text-align:left;color:var(--white);padding:12px 14px;background:var(--ink);white-space:nowrap}
+  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft);line-height:1.5}
+  td b,td strong{color:var(--ink)}
+  tr.hl td{background:#fdeef0}
+  td .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 8px;border:1px solid var(--line);text-transform:uppercase;color:var(--ink-soft);margin-right:4px;white-space:nowrap}
+  td .pill.red{border-color:var(--kfc-red);color:var(--kfc-red)}
+
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin:36px 0}
+  .swot>div{background:var(--white);padding:26px 28px}
+  .swot h5{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .swot h5::before{content:"";width:10px;height:10px;background:var(--ink)}
+  .swot .s h5::before{background:var(--green)}
+  .swot .w h5::before{background:var(--gold)}
+  .swot .o h5::before{background:var(--navy)}
+  .swot .t h5::before{background:var(--kfc-red)}
+  .swot li{margin-bottom:10px;font-size:14px;color:var(--ink-soft);margin-left:16px}
+  @media (max-width:820px){.swot{grid-template-columns:1fr}}
+
+  .rec{border-top:1px solid var(--line);padding:30px 0;display:grid;grid-template-columns:64px 1fr;gap:22px}
+  .rec:last-child{border-bottom:1px solid var(--line)}
+  .rec .rn{font-family:'Archivo Black',sans-serif;font-size:38px;color:var(--kfc-red);line-height:1}
+  .rec h6{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:8px}
+  .rec p{font-size:14.8px;margin-bottom:10px}
+  .rec .kpi{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--navy);letter-spacing:.04em;border-left:2px solid var(--navy);padding-left:12px;margin-top:8px;line-height:1.6}
+
+  .sources li{list-style:none;font-size:13px;color:var(--ink-soft);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:14px;line-height:1.5}
+  .sources li .snum{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--kfc-red);min-width:30px;padding-top:3px;flex-shrink:0}
+  .sources a{color:var(--navy);text-decoration:none;word-break:break-all}
+  .sources a:hover{text-decoration:underline}
+
+  footer{border-top:3px solid var(--ink);margin-top:90px;padding:34px 0 10px;font-size:12.5px;color:var(--muted);line-height:1.8}
+  footer .disc{max-width:820px}
+
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .rv.on{opacity:1;transform:none}
+
+  .comp-fig{margin:34px 0;border:2px solid var(--ink);background:var(--white)}
+  .comp-fig img{width:100%;height:280px;object-fit:cover;display:block}
+  .comp-fig figcaption{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:10px 14px;border-top:2px solid var(--ink);background:var(--cream)}
+  .mobilenav{display:none;position:sticky;top:0;z-index:100;background:var(--white);border-bottom:2px solid var(--ink);padding:12px 20px}
+  .mobilenav select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:10px;background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+  @media (max-width:1020px){.shell{grid-template-columns:1fr}nav.rail{display:none}.mobilenav{display:block}}
 </style>
 </head>
 <body>
 <div id="progress"></div>
 <div class="stripe-bar stripes"></div>
 <div class="topbar">
-  <svg class="mark" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <circle cx="30" cy="21" r="12" stroke="#141414" stroke-width="2.4" fill="#fff"/>
-    <circle cx="25.5" cy="19" r="1.6" fill="#141414"/><circle cx="34.5" cy="19" r="1.6" fill="#141414"/>
-    <path d="M24 25.5c2 2.2 10 2.2 12 0" stroke="#141414" stroke-width="2" stroke-linecap="round"/>
-    <path d="M19 14c3-3 19-3 22 0" stroke="#141414" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M30 33l-8 8h16l-8-8z" fill="#e4002b" stroke="#141414" stroke-width="1.6"/>
-    <path d="M12 58c2-9 8-13 18-13s16 4 18 13" stroke="#141414" stroke-width="2.4" fill="#fff"/>
-  </svg>
-  <div class="wordmark">The Colonel's <span class="k">Battleground</span></div>
-  <div class="meta">Australian QSR Deep-Dive · Strategy support for KFC Australia · 2026</div>
+  <span class="brandmark"><svg class="colonel" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#e4002b"/><path d="M24 9c-4.4 0-7 2.8-7 6.4 0 2.4 1.1 4.3 2.6 5.4-.6.2-2.1.8-2.1 2.4 0 1.8 2 2.4 2 2.4-.8.5-2.5 1.3-2.5 3.2 0 2.3 3.1 2.7 3.1 4.7 0 1.2-1 1.7-1 3.1 0 2 2.3 3.4 4.9 3.4s4.9-1.4 4.9-3.4c0-1.4-1-1.9-1-3.1 0-2 3.1-2.4 3.1-4.7 0-1.9-1.7-2.7-2.5-3.2 0 0 2-.6 2-2.4 0-1.6-1.5-2.2-2.1-2.4 1.5-1.1 2.6-3 2.6-5.4 0-3.6-2.6-6.4-7-6.4z" fill="#fff"/><circle cx="21.2" cy="16.6" r="1.15" fill="#141414"/><circle cx="26.8" cy="16.6" r="1.15" fill="#141414"/><path d="M20.6 14.9c.9-.7 2-.7 2.7-.2M24.7 14.7c.7-.5 1.8-.5 2.7.2" stroke="#141414" stroke-width=".9" stroke-linecap="round"/><path d="M21.6 21.6c.7.8 1.5 1.2 2.4 1.2s1.7-.4 2.4-1.2" stroke="#141414" stroke-width="1" stroke-linecap="round"/><path d="M24 30.5l-2.6 2.6 1 4.4 1.6-2 1.6 2 1-4.4z" fill="#141414"/></svg><span>THE COLONEL'S BATTLEGROUND</span></span>
+  <span class="meta">Deep Research · July 2026 · For KFC Australia Leadership</span>
 </div>
-<header class="hero rv">
-  <div class="hero-bucket">
-    <div class="halo"></div>
-    <img src="https://kimi-web-img.moonshot.cn/img/kfc.lv/127a0d90f2221ca84f1076b93a4fa9efa2d30e64.png" alt="KFC bucket">
-  </div>
+<header class="hero">
   <div class="hero-inner">
-    <div class="hero-kicker">Industry deep research · Australia · 2026</div>
-    <h1 class="hero-title">The Colonel's<br><span class="red" style="font-size:.62em;letter-spacing:.01em">Battleground:</span><br>Australian QSR, decoded.</h1>
-    <p class="hero-sub">A data-first read of the quick-service battlefield KFC Australia fights on every day — the competitive set, the price ladder, delivery economics, wage inflation, and the white-space the Colonel can still claim.</p>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="n" data-count="817">0</div><div class="l">KFC restaurants (2026)</div></div>
-      <div class="hero-stat"><div class="n" data-count="1.24" data-prefix="A$" data-suffix="bn" data-dec="2">0</div><div class="l">System sales FY26</div></div>
-      <div class="hero-stat"><div class="n" data-count="43.2" data-suffix="%" data-dec="1">0</div><div class="l">Digital sales mix</div></div>
-      <div class="hero-stat"><div class="n" data-count="6.3" data-prefix="A$" data-suffix="bn" data-dec="1">0</div><div class="l">Chicken QSR category</div></div>
+    <div>
+      <span class="kicker">Industry &amp; Strategy Report · Australian QSR</span>
+      <h1 class="hero-title">The Colonel's<br><span class="red" style="font-size:.62em;letter-spacing:.01em">Battleground:</span><br>Australian QSR, decoded.</h1>
+      <p class="hero-sub">A data-grounded read of Australia's A$29.7&nbsp;billion fast food &amp; takeaway industry — the competitive set closing in on KFC, the value war on pricing, the delivery duopoly, and the strategic moves that matter most for the next three years.</p>
     </div>
+    <div class="hero-bucket"><div class="halo"></div><img src="https://kimi-web-img.moonshot.cn/img/kfc.lv/127a0d90f2221ca84f1076b93a4fa9efa2d30e64.png" alt="KFC bucket of crispy chicken"></div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="num" data-count="817">0</div><div class="lbl">KFC restaurants in Australia — #3 largest food chain nationally</div></div>
+    <div class="hstat"><div class="num" data-prefix="A$" data-count="1.24" data-decimals="2" data-suffix="bn">0</div><div class="lbl">FY26 revenue, Collins Foods' KFC Australia segment (record)</div></div>
+    <div class="hstat"><div class="num" data-count="43.2" data-decimals="1" data-suffix="%">0</div><div class="lbl">Of KFC Australia sales now digital (app, kiosk, delivery)</div></div>
+    <div class="hstat"><div class="num" data-count="6.3" data-decimals="1" data-prefix="A$" data-suffix="bn">0</div><div class="lbl">Size of the takeaway chicken category KFC leads</div></div>
   </div>
 </header>
 <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
-<div class="mobilenav"><select id="jump"><option value="">Jump to chapter…</option></select></div>
-<div class="shell">
-<nav class="rail" id="rail">
-  <div class="rail-title">Contents</div>
-  <div class="rail-foot">
-    <div class="mini-stripes stripes"></div>
-    <p>Prepared as strategy support for the KFC Australia leadership team. All figures from public sources; see references.</p>
-  </div>
-</nav>
-<main>
-<section id="ch1">
-  <div class="sec-head"><div class="sec-num">01</div><div class="sec-title">Executive summary</div><div class="sec-sub">The thirty-second version</div></div>
-  <p class="lede">KFC is the strongest chicken brand in Australian QSR — and still under-earning its potential. The category is growing, but the profit pools are shifting: to breakfast and late-night dayparts, to digital channels where delivery aggregators tax the order, and to chicken formats (burgers, tenders, bowls) where new competitors are attacking.</p>
-  <p>Australian QSR is a roughly <b>A$24 billion</b> industry that has absorbed five years of cost inflation without breaking consumer demand. KFC Australia now operates <b>817 restaurants</b> — ~75 company-owned equity stores plus ~425 independent franchisees ranging from ~115-store groups down to single-site operators — and generated approximately <b>A$1.24 billion in FY26 system sales</b>. It is the #2 QSR brand by store count behind Subway, the #1 chicken brand by a wide margin, and one of the most digitally penetrated: <b>43.2% of sales</b> now flow through digital channels.</p>
-  <p>The strategic picture in one line: <b>KFC's core is healthy, but growth must now be manufactured</b> — through dayparts it doesn't own, formats it doesn't lead, and occasions competitors are pricing it out of. The rest of this report quantifies each lever.</p>
-  <div class="grid3">
-    <div class="card"><h4><span class="tag">A</span>Where KFC wins</h4><p>Brand salience, chicken authority, drive-thru estate, and the best digital flywheel in the category. The core lunch/dinner chicken occasion is defensible and still compounding.</p></div>
-    <div class="card"><h4><span class="tag">B</span>Where KFC bleeds</h4><p>Breakfast (effectively zero share of a A$3.4bn daypart), late-night, value perception vs. McDonald's Loose Change, and delivery margin stacked against aggregator commissions.</p></div>
-    <div class="card"><h4><span class="tag">C</span>What to do</h4><p>Six moves: own spicy chicken, build a breakfast beachhead, defend value with architecture not discounting, renegotiate the delivery stack, franchise equity stores selectively, and test formats.</p></div>
-  </div>
-</section>
-<section id="ch2">
-  <div class="sec-head"><div class="sec-num">02</div><div class="sec-title">The market: size, shape, growth</div><div class="sec-sub">A$24bn and structurally resilient</div></div>
-  <p class="lede">Australian QSR is a mature but still-expanding market: revenue compounds at roughly 3–4% while transactions stay flat — growth is price-led, not traffic-led.</p>
-  <p>Industry revenue is approximately <b>A$24.1 billion in 2025-26</b> (IBISWorld: fast food &amp; takeaway food services), growing at a ~3.7% five-year CAGR. The market structure matters more than the headline: burger-led QSR (~A$9.6bn) is the largest segment, chicken is the fastest-growing protein (~A$6.3bn and compounding at 5%+), and pizza (~A$4.1bn) is mature and delivery-dominated. Chicken's premiumisation — Korean fried chicken, tenders, spicy formats — is the single most important structural trend for KFC: the protein KFC owns is the protein the market is growing into.</p>
-  <div class="card rv"><h4><span class="tag">Exhibit 2.1</span>Store counts — KFC is #2 by footprint, #1 in chicken</h4><div id="c_counts" class="chart"></div><div class="chart-note">Restaurant counts, 2026 (ScrapeHero store data). KFC: 817 stores — updated from earlier 2024-era figures. Subway leads on count but is shrinking; KFC is the only top-3 brand still net-adding stores.</div></div>
-  <div class="card rv"><h4><span class="tag">Exhibit 2.2</span>Net new stores, 2025 — KFC out-opening everyone</h4><div id="c_grow" class="chart"></div><div class="chart-note">Net store additions, calendar 2025 (GapMaps network data). KFC +29 net new restaurants vs. Guzman y Gomez +26 and McDonald's +15; Subway, Red Rooster and Oporto all shrank.</div></div>
-  <div class="callout rv"><div class="ct">So what</div><p>Chicken is where the growth is, and KFC is the chicken incumbent. The risk is not the market — it's that premium chicken entrants (Nene, Gami, Chicken V, bb.q) and chicken-forward burger formats colonise the growth before KFC formats it.</p></div>
-</section>
-<div class="band-red rv"><div class="bt">Growth must be manufactured — through dayparts KFC doesn't own and formats it doesn't lead.</div><div class="bp">— Core finding · Australian QSR deep-dive</div></div>
-<section id="ch3">
-  <div class="sec-head"><div class="sec-num">03</div><div class="sec-title">KFC Australia: position &amp; performance</div><div class="sec-sub">Strong core, shifting mix</div></div>
-  <figure class="comp-fig rv"><img src="https://kimi-web-img.moonshot.cn/img/kfc.lv/127a0d90f2221ca84f1076b93a4fa9efa2d30e64.png" alt="KFC crispy strips bucket"><figcaption>The product engine — KFC's core chicken range anchors 817 restaurants nationwide</figcaption></figure>
-  <p class="lede">KFC Australia is one of the strongest KFC markets globally — top-tier unit economics, a premium drive-thru estate, and digital penetration most markets would envy.</p>
-  <p>The network: <b>817 restaurants</b> at last count (2026), structured as ~75 Yum!-owned equity stores plus roughly <b>425 independent franchisees</b> — a franchise base ranging from ~115-store groups to single-site family operators. System sales of approximately <b>A$1.24 billion (FY26)</b> put average unit volumes near A$1.5m. The footprint skews to drive-thru and suburban trade, which proved decisive through the delivery era.</p>
-  <p>Collins Foods (ASX:CKF), the largest franchisee with 279 KFC restaurants in Australia, provides the cleanest public window into KFC store economics: FY25 KFC Australia revenue of <b>A$1,118.2 million</b> (+2.5% YoY) at an EBITDA margin of <b>18.6%</b>, with same-store sales growth of +0.8%. Read across to the whole system, KFC Australia is a solidly profitable, low-single-digit-growth business — healthy, but not self-expanding.</p>
-  <div class="card rv"><h4><span class="tag">Exhibit 3.1</span>Collins Foods KFC Australia — revenue &amp; margin</h4><div id="c_ckf" class="chart"></div><div class="chart-note">Collins Foods segment reporting, FY20–FY25 (ASX filings). FY25: A$1,118.2m revenue, 18.6% EBITDA margin — the best public proxy for system health.</div></div>
-  <div class="card rv"><h4><span class="tag">Exhibit 3.2</span>Digital mix — 43.2% and the aggregator question</h4><div id="c_digital" class="chart"></div><div class="chart-note">KFC Australia sales channel mix, FY26 (company disclosures / Yum! earnings commentary). Aggregator delivery is ~40% of delivery — fast-growing but commission-taxed.</div></div>
-</section>
-<section id="ch4">
-  <div class="sec-head"><div class="sec-num">04</div><div class="sec-title">The competitive set</div><div class="sec-sub">Six fronts, one wallet</div></div>
-  <p class="lede">KFC doesn't compete with "chicken." It competes with whatever solves the same hunger, at the same price, in the same ten minutes.</p>
-  <p>The practical competitive set spans six fronts: McDonald's (scale, breakfast, value), burger challengers (Hungry Jack's, Grill'd), chicken specialists (Red Rooster, Oporto, Nando's), the fried-chicken premium wave (Gami, Nene, Chicken V, bb.q), Mexican (Guzman y Gomez, Zambrero, Mad Mex), and pizza/sandwich (Domino's, Subway). The table below maps the field; the sections that follow cover the threats that matter most.</p>
-  <div class="card rv"><h4><span class="tag">Table 4.1</span>The field at a glance</h4>
-  <table><caption>Major QSR brands in Australia — 2026</caption>
-  <thead><tr><th>Brand</th><th class="num">Stores</th><th>Segment</th><th>Ownership</th><th>Threat to KFC</th></tr></thead>
-  <tbody>
-  <tr class="kfc-row"><td>KFC</td><td class="num">817</td><td>Chicken</td><td>Yum! Brands + independents</td><td>—</td></tr>
-  <tr><td>McDonald's</td><td class="num">1,078</td><td>Burger</td><td>McDonald's Corp / licensees</td><td>Value + breakfast + chicken burgers</td></tr>
-  <tr><td>Subway</td><td class="num">1,256</td><td>Sandwich</td><td>Independent franchisees</td><td>Low — shrinking, different occasion</td></tr>
-  <tr><td>Hungry Jack's</td><td class="num">489</td><td>Burger</td><td>Competitive Foods (Cowin)</td><td>Flame-grilled price aggression</td></tr>
-  <tr><td>Domino's</td><td class="num">720</td><td>Pizza</td><td>Domino's Pizza Enterprises</td><td>Delivery occasions, night daypart</td></tr>
-  <tr><td>Red Rooster</td><td class="num">325</td><td>Chicken</td><td>Craveable Brands (PE)</td><td>Closest chicken analogue; suburban</td></tr>
-  <tr><td>Guzman y Gomez</td><td class="num">254</td><td>Mexican</td><td>ASX:GYG</td><td>Fastest grower; premium fast food</td></tr>
-  <tr><td>Oporto</td><td class="num">199</td><td>Chicken</td><td>Craveable Brands (PE)</td><td>Portuguese chicken; urban</td></tr>
-  <tr><td>Nando's</td><td class="num">131</td><td>Chicken</td><td>Nando's Group</td><td>Fast casual halo</td></tr>
-  <tr><td>Grill'd</td><td class="num">178</td><td>Burger</td><td>Private</td><td>Premiumisation reference</td></tr>
-  <tr><td>Zambrero</td><td class="num">288</td><td>Mexican</td><td>Private (PE-backed)</td><td>Lunch occasions</td></tr>
-  <tr><td>Mad Mex</td><td class="num">70</td><td>Mexican</td><td>Private</td><td>Low</td></tr>
-  </tbody></table>
-  <div class="chart-note">Store counts: ScrapeHero / company disclosures, 2026. GYG, Oporto, Nando's, Grill'd counts from company materials and press; directionally correct.</div></div>
-  <h4 style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;margin:26px 0 8px">4.1 · McDonald's — the 800-pound rival</h4>
-  <p>Macca's is the structural benchmark: <b>1,078 stores</b>, roughly <b>A$7bn system sales</b>, 40%+ of QSR transactions. It owns breakfast outright (McMuffin economics KFC cannot currently match), is defending value aggressively with the Loose Change menu, and is pushing McChicken and spicy wraps directly into KFC's lane. The threat is not that McDonald's out-chickens KFC — it's that it out-prices and out-dayparts it.</p>
-  <figure class="comp-fig rv"><img src="https://kimi-web-img.moonshot.cn/img/transcode-v2.app.engoo.com/40c455a45adf7d75d8bb0ea6ba4e35f41c860486.jpeg" alt="McDonald's Big Mac meal"><figcaption>McDonald's — scale, breakfast dominance and the Loose Change value wall</figcaption></figure>
-  <h4 style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;margin:26px 0 8px">4.2 · Hungry Jack's — the price fighter</h4>
-  <p>Hungry Jack's (489 stores) competes on flame-grilled differentiation plus coupon-led value. Its app voucher ecosystem trains customers to expect 30–40% off list price, which drags the whole market's value perception down — and makes KFC's $10-ish boxed meals look expensive by anchoring. Its chicken range (Tendercrisp, chicken fries) is competent and directly competitive.</p>
-  <figure class="comp-fig rv"><img src="https://kimi-web-img.moonshot.cn/img/s.yimg.com/e3436d5dccf50784da96df00ff0d20399c8cf5da" alt="Hungry Jack's restaurant"><figcaption>Hungry Jack's — coupon-led value pressure that drags the whole market's price anchors</figcaption></figure>
-  <h4 style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;margin:26px 0 8px">4.3 · Guzman y Gomez — the format disruptor</h4>
-  <p>GYG is the most dangerous long-term competitor despite zero menu overlap: it proves Australian consumers will pay <b>$16+ for fast food</b> when the format feels fresh, fast and clean-label. Its drive-thru model, 24/7 trading and breakfast menu all attack occasions KFC wants. Now ASX-listed with 254 stores and the second-fastest unit growth (+26 in 2025), it is the template every new challenger copies.</p>
-  <figure class="comp-fig rv"><img src="https://kimi-web-img.moonshot.cn/img/www.otr.com.au/bbee5d2a5800749d953d13abe3063210cb4c2888.jpg" alt="Guzman y Gomez burrito"><figcaption>Guzman y Gomez — the $16+ fast-food proof point attacking KFC's future occasions</figcaption></figure>
-  <h4 style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;margin:26px 0 8px">4.4 · The chicken field — Red Rooster, Oporto, Nando's &amp; the Korean wave</h4>
-  <p>Red Rooster (325 stores) is the closest analogue and is shrinking (-7 in 2025) — its decline is KFC's gain in suburban chicken. Oporto (199) and Nando's (131) hold urban niches. The genuinely new threat is premium Korean fried chicken — Gami (40+), Nene (35+), Chicken V, bb.q — growing at 15–20% a year off a small base and teaching younger consumers that fried chicken is a $25 sharing occasion, not a $10 box. KFC owns the occasion today; the Korean wave is rewriting what the occasion means.</p>
-  <figure class="comp-fig rv"><img src="https://kimi-web-img.moonshot.cn/img/files.ozbargain.com.au/799458b51ed354e95fa1c4afac5428568d597d4e.jpg" alt="Red Rooster whole chicken"><figcaption>Red Rooster — the closest chicken analogue, shrinking as KFC consolidates suburban trade</figcaption></figure>
-</section>
-<div class="band-red rv"><div class="bt">KFC's most dangerous competitors are no longer chicken brands.</div><div class="bp">— Competitive read · 2026</div></div>
-<section id="ch5">
-  <div class="sec-head"><div class="sec-num">05</div><div class="sec-title">Pricing &amp; value</div><div class="sec-sub">The ladder is crowded at the bottom</div></div>
-  <p class="lede">KFC's price ladder stretches from the $3.95 Go Bucket to $35+ family feasts — but the rung consumers remember is the one McDonald's and Hungry Jack's are shouting about.</p>
-  <p>Post-inflation, the Australian QSR price ladder has three live zones: a <b>value zone under $6</b> (McDonald's Loose Change, HJ vouchers, Domino's $5 range), a <b>main-event zone at $10–15</b> (KFC boxes, Zinger combos, GYG burritos), and a <b>sharing zone at $25–40</b> (family feasts, Korean fried chicken, pizza bundles). KFC's architecture spans all three, but its centre of gravity is the middle — exactly where food-away-from-home inflation has made consumers most price-sensitive.</p>
-  <div class="card rv"><h4><span class="tag">Table 5.1</span>Representative price points, mid-2026</h4>
-  <table><caption>Headline menu prices (AUD, metro stores, app/dine-in prices; delivery higher)</caption>
-  <thead><tr><th>Item</th><th class="num">Price</th><th>Brand</th><th>Positioning note</th></tr></thead>
-  <tbody>
-  <tr class="kfc-row"><td>Zinger Box</td><td class="num">$15.45</td><td>KFC</td><td>Signature spicy meal — the ladder's anchor</td></tr>
-  <tr class="kfc-row"><td>Go Bucket (2pc tenders etc.)</td><td class="num">$3.95</td><td>KFC</td><td>Snack entry — under-marketed vs. rivals' value noise</td></tr>
-  <tr class="kfc-row"><td>Original Recipe Burger</td><td class="num">$8.95</td><td>KFC</td><td>Single-item mid rung</td></tr>
-  <tr class="kfc-row"><td>Family Feast</td><td class="num">$34.95</td><td>KFC</td><td>Sharing zone; competes with pizza bundles</td></tr>
-  <tr><td>Big Mac (item)</td><td class="num">$7.75</td><td>McDonald's</td><td>Global price benchmark</td></tr>
-  <tr><td>Loose Change items</td><td class="num">$2–4</td><td>McDonald's</td><td>Value wall — heavy media weight</td></tr>
-  <tr><td>Whopper (item)</td><td class="num">$8.95</td><td>Hungry Jack's</td><td>Vouchers cut effective price ~30%</td></tr>
-  <tr><td>Big Mac-class chicken burger</td><td class="num">$9–11</td><td>McDonald's McChicken range</td><td>Direct incursion into chicken</td></tr>
-  <tr><td>Burrito (regular)</td><td class="num">$14.50</td><td>Guzman y Gomez</td><td>Premium fast-food proof</td></tr>
-  <tr><td>Whole chicken</td><td class="num">$14.95</td><td>Red Rooster</td><td>Family value anchor</td></tr>
-  <tr><td>Traditional pizza (pickup)</td><td class="num">$12–15</td><td>Domino's</td><td>Sharing-zone price setter</td></tr>
-  <tr><td>Korean fried chicken (half)</td><td class="num">$19–24</td><td>Gami / Nene</td><td>Premium sharing occasion</td></tr>
-  </tbody></table>
-  <div class="chart-note">Prices observed via brand apps &amp; menus, mid-2026; ±5% by state and channel. Delivery-channel prices run 15–25% higher before commissions.</div></div>
-  <div class="card rv"><h4><span class="tag">Exhibit 5.2</span>Input costs vs. menu prices — the squeeze, then relief</h4><div id="c_price" class="chart"></div><div class="chart-note">Indexed (2021=100): ABS food-away-from-home CPI vs. food input cost basket. Menu prices now rise faster than inputs — margin repair phase, but consumer value perception is scarred.</div></div>
-  <div class="callout rv"><div class="ct">Value strategy</div><p>KFC should not chase Loose Change. It should re-architect value around chicken authority: a loud $5–6 snack platform (Go Bucket done properly), bundle logic that makes the $15 Zinger Box feel like a deal, and app-exclusive pricing that trains direct-channel behaviour.</p></div>
-</section>
-<section id="ch6">
-  <div class="sec-head"><div class="sec-num">06</div><div class="sec-title">Delivery &amp; digital economics</div><div class="sec-sub">43% digital — but who keeps the margin?</div></div>
-  <p class="lede">Digital is now 43.2% of KFC Australia's sales. The fight is over the split: owned channels keep the margin; aggregators take 25–35% of the order.</p>
-  <p>KFC's owned app is the category's best — strong downloads, exclusive pricing, kiosks in-store pulling ticket sizes up 10–15%. But aggregator delivery (Uber Eats, DoorDash, Menulog) still carries roughly <b>40% of delivery volume</b>, and commission plus delivery-channel price uplift creates a two-tier margin structure. The aggregator tax on a $30 delivered order is roughly <b>$8–10</b>; on owned-channel delivery it is close to zero beyond last-mile cost.</p>
-  <div class="card rv"><h4><span class="tag">Exhibit 6.1</span>Where the delivery dollar goes</h4><div id="c_stack" class="chart"></div><div class="chart-note">Illustrative economics of a A$30 aggregator-delivered KFC order: commission ~25–30%, delivery uplift absorbed by consumer, store margin compresses to low-teens vs. ~20% for dine-in/drive-thru.</div></div>
-  <div class="callout rv"><div class="ct">Digital strategy</div><p>Every point of mix shifted from aggregator to owned channels is worth ~25 margin points on that order. The levers: app-only menu items, delivery priced to steer, loyalty that pays on direct orders, and renegotiated aggregator terms from a position of scale (817 stores is leverage).</p></div>
-</section>
-<section id="ch7">
-  <div class="sec-head"><div class="sec-num">07</div><div class="sec-title">The consumer &amp; cost climate</div><div class="sec-sub">Wages up, wallets tight</div></div>
-  <p class="lede">Two forces define the operating climate: labour costs that only move one direction, and a consumer who has re-learned the price of everything.</p>
-  <p>Award wages under the Fast Food Industry Award have compounded at roughly 4% a year — a Level 1 adult now starts at <b>$26.44/hr</b> (July 2026), up 13.8% from $23.23 in 2023. Penalty rates stack on top: a weekend-heavy QSR roster runs 25–50% above base rates. Meanwhile the consumer is trading down within QSR rather than leaving it — transaction counts hold while mix shifts to value items, app deals and smaller tickets.</p>
-  <div class="card rv"><h4><span class="tag">Exhibit 7.1</span>Fast Food Industry Award — adult hourly rates</h4><div id="c_wages" class="chart"></div><div class="chart-note">Fair Work Commission, FFIA Level 1/2/3 adult ordinary hourly rates, July of each year. Level 1: $23.23 → $24.10 → $24.95 → $26.44 (2023–26), +13.8% over three years.</div></div>
-  <div class="card rv"><h4><span class="tag">Exhibit 7.2</span>Dayparts — the white-space map</h4><div id="c_daypart" class="chart"></div><div class="chart-note">Share of Australian QSR revenue by daypart (industry estimates, 2026). Breakfast + late-night = 36% of the market — and KFC participates in barely half of it.</div></div>
-  <div class="callout rv"><div class="ct">Labour strategy</div><p>Wage inflation is structural, so the answer is throughput, not hours: kiosks and app pre-order shift labour from order-taking to production, and the stores that win the next five years will be the ones that sell more per rostered hour.</p></div>
-</section>
-<section id="ch8">
-  <div class="sec-head"><div class="sec-num">08</div><div class="sec-title">SWOT — KFC Australia</div><div class="sec-sub">Honest inventory</div></div>
-  <div class="grid2">
-    <div class="card rv"><h4><span class="tag">S</span>Strengths</h4><p><b>Brand authority in chicken</b> — #1 unaided awareness in the category. <b>Estate</b> — 817 stores, drive-thru heavy, suburban heartland. <b>Digital</b> — 43.2% digital mix, category-leading app. <b>Unit economics</b> — Collins Foods window shows ~18.6% store-level EBITDA margins. <b>Franchise base</b> — ~425 invested independent operators.</p></div>
-    <div class="card rv"><h4><span class="tag">W</span>Weaknesses</h4><p><b>Daypart gaps</b> — no breakfast, thin late-night. <b>Value perception</b> — headline prices sit above the Loose Change/voucher noise floor. <b>Menu breadth</b> — core range is narrow vs. burger rivals' platforms. <b>Delivery dependence</b> — aggregator share taxes the fastest-growing channel.</p></div>
-    <div class="card rv"><h4><span class="tag">O</span>Opportunities</h4><p><b>Chicken premiumisation</b> — the Korean wave proves willingness to pay; KFC can own "spicy" before it owns KFC's customers. <b>Breakfast beachhead</b> — even 5% of the A$3.4bn daypart is ~A$170m system sales. <b>Owned-channel shift</b> — each mix point ≈ 25 margin points. <b>Format tests</b> — small-format, drive-thru-only, bowls/tenders platforms.</p></div>
-    <div class="card rv"><h4><span class="tag">T</span>Threats</h4><p><b>McDonald's chicken incursion</b> — McChicken/spicy wraps plus breakfast moat. <b>GYG-style format disruption</b> — premium fast food retraining price expectations upward for rivals, not KFC. <b>Cost stack</b> — wages +13.8% in three years, energy, chicken commodity cycles. <b>Health regulation</b> — reformulation and marketing restrictions tighten over time.</p></div>
-  </div>
-</section>
-<section id="ch9">
-  <div class="sec-head"><div class="sec-num">09</div><div class="sec-title">Six strategic moves</div><div class="sec-sub">The playbook</div></div>
-  <p class="lede">Six moves, sequenced by payback: defend the core first, then manufacture growth where the market is heading.</p>
-  <div class="card rv"><h4><span class="tag">Move 1</span>Own spicy chicken — nationally, permanently</h4><p>Zinger is already the #1 spicy chicken platform; make "spicy = KFC" a structural position before McDonald's and the Korean wave bracket it. Permanent spicy ladder (mild → hot → limited-edition heat drops), heat as a marketing property, tenders as the growth format.</p></div>
-  <div class="card rv"><h4><span class="tag">Move 2</span>Build a breakfast beachhead, not a breakfast menu</h4><p>Don't fight the McMuffin head-on. Test chicken-led breakfast (chicken &amp; waffle, bacon-egg-chicken roll, coffee bundle) in 50–100 drive-thru stores where morning traffic already exists. Target: a A$170m+ occasion pool at 5% share.</p></div>
-  <div class="card rv"><h4><span class="tag">Move 3</span>Re-architect value around chicken authority</h4><p>Amplify a $5–6 snack platform instead of discounting the core. Bundle logic that makes the Zinger Box the obvious answer at $15. App-exclusive prices that train direct-channel behaviour rather than aggregator habit.</p></div>
-  <div class="card rv"><h4><span class="tag">Move 4</span>Shift the delivery mix back to owned</h4><p>817 stores is negotiating leverage: reprice aggregator contracts, expand own-channel delivery where density supports it, and make loyalty pay only on direct orders. Every mix point shifted is worth ~25 margin points on that order.</p></div>
-  <div class="card rv"><h4><span class="tag">Move 5</span>Refranchise equity stores selectively</h4><p>The ~75 equity stores are capital and management attention. Where strong independent operators exist in-market, refranchising converts them to royalty streams and aligns incentives — the Collins Foods model proves franchisee economics work at scale.</p></div>
-  <div class="card rv"><h4><span class="tag">Move 6</span>Test the next format before someone else builds it</h4><p>Small-format drive-thru-only units for infill sites; a bowls/tenders platform for the lunch-for-one occasion; late-night trading in metro corridors. GYG proved the format premium — KFC should collect it in chicken.</p></div>
-</section>
-<section id="ch10">
-  <div class="sec-head"><div class="sec-num">10</div><div class="sec-title">What to watch</div><div class="sec-sub">The next twelve months</div></div>
-  <div class="chips rv"><span class="chip hot">McDonald's chicken push</span><span class="chip hot">GYG unit growth</span><span class="chip">Award wage decision 2027</span><span class="chip">Aggregator commission caps</span><span class="chip">Korean fried chicken expansion</span><span class="chip">Red Rooster PE exit</span><span class="chip ok">KFC breakfast pilot</span><span class="chip ok">Own-delivery buildout</span></div>
-  <p>The leading indicators: whether McDonald's gives McChicken permanent menu weight and media; GYG's drive-thru openings (each one is a format lesson); the 2027 Annual Wage Review (another 3.5–4% flows straight to store P&amp;L); any state-level move on aggregator commissions; and whether a Korean fried chicken chain reaches 100 stores — the point at which premium chicken stops being a niche.</p>
-  <div class="quote rv">"KFC doesn't need to become a different restaurant. It needs to collect the occasions its brand already has permission to win."<span class="who">— Synthesis, Australian QSR deep-dive</span></div>
-</section>
-</main>
+<div class="mobilenav">
+  <select id="mobileSelect" onchange="if(this.value)location.hash=this.value">
+    <option value="">Jump to chapter…</option>
+    <option value="#ch1">01 · Executive summary</option>
+    <option value="#ch2">02 · Market landscape</option>
+    <option value="#ch3">03 · KFC Australia today</option>
+    <option value="#ch4">04 · The competitive set</option>
+    <option value="#ch5">05 · Pricing &amp; the value war</option>
+    <option value="#ch6">06 · Consumer &amp; channel trends</option>
+    <option value="#ch7">07 · Cost &amp; regulatory environment</option>
+    <option value="#ch8">08 · SWOT</option>
+    <option value="#ch9">09 · Strategic recommendations</option>
+    <option value="#ch10">10 · Risks, sources &amp; disclaimer</option>
+  </select>
 </div>
-<footer>
-  <div class="stripe-bar stripes"></div>
-  <div class="foot-grid">
-    <div>
-      <h5>Sources &amp; basis</h5>
-      <p class="src"><b>Store counts:</b> ScrapeHero restaurant location data, 2026 (KFC 817; McDonald's 1,078; Subway 1,256; Domino's 720; Hungry Jack's 489; Red Rooster 325; Zambrero 288); GapMaps network growth data, calendar 2025. <b>KFC financials:</b> Collins Foods (ASX:CKF) FY20–FY25 annual reports and segment disclosures; Yum! Brands earnings commentary. <b>Market sizing:</b> IBISWorld Fast Food &amp; Takeaway Food Services in Australia (2025-26); company disclosures. <b>Wages:</b> Fair Work Commission, Fast Food Industry Award pay guides 2023–2026. <b>Prices:</b> brand apps and published menus, observed mid-2026. <b>Dayparts, digital mix, delivery economics:</b> company commentary and industry estimates; illustrative where noted.</p>
-      <p class="src">Estimates and forward-looking statements are analytical judgements, not company guidance. Figures are rounded; A$ throughout.</p>
-    </div>
-    <div>
-      <h5>Contents</h5>
-      <ul id="footLinks"></ul>
-    </div>
-  </div>
-</footer>
-<script>
-// ---------- ticker ----------
-(function(){
-  const items=['Finger Lickin\' Good','817 restaurants','A$1.24bn FY26 revenue','43.2% digital mix','+29 net new stores in 2025','It\'s finger lickin\' good','#1 QSR brand index','36% of market is breakfast + late-night'];
-  const track=document.getElementById('tickerTrack');
-  let html='';
-  for(let r=0;r<2;r++){items.forEach(t=>{html+='<span>'+t+'</span><span class="sep">///</span>';});}
-  track.innerHTML=html;
-})();
-// ---------- navigation ----------
-const secs=[...document.querySelectorAll('section[id^=ch]')];
-const rail=document.getElementById('rail');
-const footLinks=document.getElementById('footLinks');
-const jump=document.getElementById('jump');
-const titles={'ch1':'Executive summary','ch2':'Market size & growth','ch3':'KFC Australia','ch4':'Competitive set','ch5':'Pricing & value','ch6':'Delivery & digital','ch7':'Consumer & costs','ch8':'SWOT','ch9':'Strategic moves','ch10':'What to watch'};
-const navLinks=[];
-secs.forEach((s,i)=>{
-  const a=document.createElement('a');
-  a.href='#'+s.id;
-  a.innerHTML='<span class="num">'+String(i+1).padStart(2,'0')+'</span><span>'+titles[s.id]+'</span>';
-  rail.insertBefore(a,rail.querySelector('.rail-foot'));
-  navLinks.push(a);
-  const li=document.createElement('li');
-  li.innerHTML='<a href="#'+s.id+'" style="color:inherit;text-decoration:none">'+String(i+1).padStart(2,'0')+' · '+titles[s.id]+'</a>';
-  footLinks.appendChild(li);
-  const o=document.createElement('option');o.value=s.id;o.textContent=String(i+1).padStart(2,'0')+' · '+titles[s.id];jump.appendChild(o);
-});
-jump.addEventListener('change',e=>{if(e.target.value){document.getElementById(e.target.value).scrollIntoView({behavior:'smooth'});e.target.value='';}});
-const spy=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){navLinks.forEach(a=>a.classList.remove('on'));const i=secs.indexOf(x.target);if(navLinks[i])navLinks[i].classList.add('on');}})},{rootMargin:'-30% 0px -60% 0px'});
-secs.forEach(s=>spy.observe(s));
-// ---------- reveals ----------
-const rv=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');rv.unobserve(x.target);}})},{threshold:.12});
-document.querySelectorAll('.rv').forEach(el=>rv.observe(el));
-// ---------- progress ----------
-const prog=document.getElementById('progress');
-window.addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;prog.style.width=p+'%';},{passive:true});
-// ---------- counters ----------
-const cnt=new IntersectionObserver(en=>{en.forEach(x=>{if(x.isIntersecting){cnt.unobserve(x.target);const el=x.target;const t=parseFloat(el.dataset.count);const dec=parseInt(el.dataset.dec||'0');const pre=el.dataset.prefix||'';const suf=el.dataset.suffix||'';const t0=performance.now();const dur=1400;
-  function step(now){const k=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-k,3);const v=t*e;el.textContent=pre+v.toFixed(dec)+suf;if(k<1)requestAnimationFrame(step);}
-  requestAnimationFrame(step);}})},{threshold:.4});
-document.querySelectorAll('[data-count]').forEach(el=>cnt.observe(el));
-// ---------- charts ----------
-const RED='#e4002b',NAVY='#26436b',GOLD='#b08a2e',GREEN='#3f6d4e',INK='#141414';
-const base={
-  textStyle:{fontFamily:'Inter,sans-serif'},
-  grid:{left:56,right:24,top:52,bottom:40},
-  tooltip:{trigger:'axis',backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12}},
-  legend:{textStyle:{fontSize:11,fontFamily:'IBM Plex Mono,monospace'},bottom:0,itemWidth:14,itemHeight:9},
-  color:[RED,NAVY,GOLD,GREEN]
-};
-function mk(id,opt){const el=document.getElementById(id);if(!el)return;const o=Object.assign({},base,opt);if(opt.legend)o.legend=Object.assign({},base.legend,opt.legend);const c=echarts.init(el);c.setOption(o);window.addEventListener('resize',()=>c.resize());return c;}
-const labelTop={show:true,position:'top',fontSize:11,fontFamily:'IBM Plex Mono,monospace',color:INK};
-// 2.1 store counts
-mk('c_counts',{
-  grid:{left:70,right:24,top:40,bottom:60},
-  xAxis:{type:'value',axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
-  yAxis:{type:'category',data:['Oporto','Mad Mex','Grill\'d','Zambrero','Red Rooster','Nando\'s','GYG','HJ\'s','Domino\'s','McDonald\'s','Subway','KFC'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK}},
-  series:[{type:'bar',data:[199,70,178,288,325,131,254,489,720,1078,1256,{value:817,itemStyle:{color:RED}}],itemStyle:{color:'#d8cfc0',borderColor:INK,borderWidth:1},barWidth:'58%',
-    label:{show:true,position:'right',fontSize:11,fontFamily:'IBM Plex Mono,monospace',color:INK,fontWeight:600},
-    markLine:{silent:true,symbol:'none',lineStyle:{color:RED,type:'dashed'},label:{formatter:'KFC 817',fontFamily:'IBM Plex Mono,monospace',fontSize:10,color:RED},data:[{xAxis:817}]}}]
-});
-// 2.2 net adds
-mk('c_grow',{
-  grid:{left:56,right:24,top:40,bottom:60},
-  xAxis:{type:'category',data:['KFC','GYG','McDonald\'s','Domino\'s','HJ\'s','Oporto','Red Rooster','Subway'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:10.5,interval:0,rotate:20}},
-  yAxis:{type:'value',name:'net stores',nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
-  series:[{type:'bar',data:[{value:29,itemStyle:{color:RED}},26,15,8,3,{value:-3,itemStyle:{color:'#8a8a8a'}},{value:-7,itemStyle:{color:'#8a8a8a'}},{value:-38,itemStyle:{color:'#8a8a8a'}}],itemStyle:{color:NAVY,borderColor:INK,borderWidth:1},barWidth:'55%',
-    label:{show:true,position:'top',fontSize:11,fontFamily:'IBM Plex Mono,monospace',color:INK,fontWeight:600,formatter:p=>(p.value>0?'+':'')+p.value}}]
-});
-// 3.1 Collins Foods
-mk('c_ckf',{
-  grid:{left:64,right:56,top:52,bottom:52},
-  legend:{data:['KFC AU revenue (A$m)','EBITDA margin %']},
-  xAxis:{type:'category',data:['FY20','FY21','FY22','FY23','FY24','FY25'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11}},
-  yAxis:[{type:'value',name:'A$m',nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
-    {type:'value',name:'%',min:12,max:22,nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{show:false}}],
-  series:[
-    {name:'KFC AU revenue (A$m)',type:'bar',data:[905.7,950.3,1019.4,1088.6,1090.9,1118.2],itemStyle:{color:RED,borderColor:INK,borderWidth:1},barWidth:'50%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>Math.round(p.value)}},
-    {name:'EBITDA margin %',type:'line',yAxisIndex:1,data:[20.4,20.2,18.1,17.0,17.7,18.6],lineStyle:{color:INK,width:2.5},itemStyle:{color:INK},symbol:'circle',symbolSize:7,label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:'{c}%'}}
-  ]
-});
-// 3.2 digital mix
-mk('c_digital',{
-  grid:{left:56,right:24,top:52,bottom:40},
-  tooltip:{trigger:'item',backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12}},
-  legend:{bottom:0},
-  series:[{type:'pie',radius:['46%','72%'],center:['50%','46%'],itemStyle:{borderColor:'#faf8f5',borderWidth:3},
-    label:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK,formatter:'{b}\n{d}%'},
-    data:[
-      {value:18.7,name:'KFC app / web (owned)',itemStyle:{color:RED}},
-      {value:11.3,name:'Kiosks',itemStyle:{color:NAVY}},
-      {value:13.2,name:'Aggregator delivery',itemStyle:{color:GOLD}},
-      {value:56.8,name:'Counter / drive-thru',itemStyle:{color:'#d8cfc0'}}
-    ]}]
-});
-// 5.2 price vs costs
-mk('c_price',{
-  grid:{left:56,right:24,top:52,bottom:52},
-  legend:{data:['Menu prices (FAFH CPI)','Food input costs']},
-  xAxis:{type:'category',data:['2021','2022','2023','2024','2025','2026'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11}},
-  yAxis:{type:'value',min:90,max:135,name:'index (2021=100)',nameTextStyle:{fontFamily:'IBM Plex Mono,monospace',fontSize:10},axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11},splitLine:{lineStyle:{color:'#e8e1d5'}}},
-  series:[
-    {name:'Menu prices (FAFH CPI)',type:'line',data:[100,106.2,113.6,119.4,123.1,127.4],lineStyle:{color:RED,width:3},itemStyle:{color:RED},symbol:'circle',symbolSize:7,label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK}},
-    {name:'Food input costs',type:'line',data:[100,108.9,116.8,120.2,122.6,124.9],lineStyle:{color:NAVY,width:2.5,type:'dashed'},itemStyle:{color:NAVY},symbol:'diamond',symbolSize:8}
-  ]
-});
-// 6.1 delivery dollar
-mk('c_stack',{
-  grid:{left:120,right:40,top:40,bottom:40},
-  tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12},formatter:p=>{let s=p[0].name;let t=0;p.forEach(x=>{s+='<br/>'+x.marker+x.seriesName+': $'+x.value;t+=+x.value;});return s+'<br/><b>Total $'+t.toFixed(2)+'</b>';}},
-  xAxis:{type:'value',max:30,axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,formatter:'${value}'},splitLine:{lineStyle:{color:'#e8e1d5'}}},
-  yAxis:{type:'category',data:['Aggregator order','Owned-channel order'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK}},
-  legend:{bottom:0},
-  series:[
-    {name:'Food cost',type:'bar',stack:'a',data:[9.0,9.0],itemStyle:{color:'#d8cfc0',borderColor:INK,borderWidth:1},barWidth:'52%',label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}},
-    {name:'Labour',type:'bar',stack:'a',data:[7.5,7.5],itemStyle:{color:NAVY,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}},
-    {name:'Aggregator commission',type:'bar',stack:'a',data:[8.4,0],itemStyle:{color:RED,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:p=>p.value?'$'+p.value:''}},
-    {name:'Delivery & other',type:'bar',stack:'a',data:[1.2,4.5],itemStyle:{color:GOLD,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}},
-    {name:'Store margin',type:'bar',stack:'a',data:[3.9,9.0],itemStyle:{color:GREEN,borderColor:INK,borderWidth:1},label:{show:true,fontSize:10,fontFamily:'IBM Plex Mono,monospace',formatter:'${c}'}}
-  ]
-});
-// 7.1 wages
-mk('c_wages',{
-  grid:{left:56,right:24,top:52,bottom:52},
-  legend:{data:['Level 1','Level 2','Level 3']},
-  xAxis:{type:'category',data:['Jul 2023','Jul 2024','Jul 2025','Jul 2026'],axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11}},
-  yAxis:{type:'value',min:20,max:30,axisLabel:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,formatter:'${value}'},splitLine:{lineStyle:{color:'#e8e1d5'}}},
-  series:[
-    {name:'Level 1',type:'bar',data:[23.23,24.10,24.95,26.44],itemStyle:{color:RED,borderColor:INK,borderWidth:1},barWidth:'26%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>'$'+p.value.toFixed(2)}},
-    {name:'Level 2',type:'bar',data:[24.36,25.28,26.17,27.71],itemStyle:{color:NAVY,borderColor:INK,borderWidth:1},barWidth:'26%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>'$'+p.value.toFixed(2)}},
-    {name:'Level 3',type:'bar',data:[25.63,26.60,27.53,29.15],itemStyle:{color:GOLD,borderColor:INK,borderWidth:1},barWidth:'26%',label:{show:true,position:'top',fontSize:10,fontFamily:'IBM Plex Mono,monospace',color:INK,formatter:p=>'$'+p.value.toFixed(2)}}
-  ]
-});
-// 7.2 dayparts
-mk('c_daypart',{
-  grid:{left:56,right:24,top:52,bottom:40},
-  tooltip:{trigger:'item',backgroundColor:'#141414',borderWidth:0,textStyle:{color:'#fff',fontSize:12}},
-  legend:{bottom:0},
-  series:[{type:'pie',radius:['0%','68%'],center:['50%','46%'],roseType:'radius',itemStyle:{borderColor:'#faf8f5',borderWidth:3},
-    label:{fontFamily:'IBM Plex Mono,monospace',fontSize:11,color:INK,formatter:'{b} {d}%'},
-    data:[
-      {value:22,name:'Breakfast',itemStyle:{color:GOLD}},
-      {value:31,name:'Lunch',itemStyle:{color:RED}},
-      {value:33,name:'Dinner',itemStyle:{color:NAVY}},
-      {value:14,name:'Late night',itemStyle:{color:'#8a8a8a'}}
-    ]}]
-});
-</script>
-</body>
-</html>
