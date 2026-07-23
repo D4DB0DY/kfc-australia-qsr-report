@@ -9,172 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
-<style>
-  :root{
-    --kfc-red:#e4002b;
-    --kfc-deep:#a3001e;
-    --ink:#141414;
-    --ink-soft:#4a4640;
-    --muted:#8b8172;
-    --paper:#faf8f5;
-    --cream:#f2ede3;
-    --line:#e3dccd;
-    --white:#ffffff;
-    --navy:#26436b;
-    --gold:#b08a2e;
-    --green:#3f6d4e;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter',-apple-system,'Segoe UI',sans-serif;
-    font-size:16px;line-height:1.72;
-    -webkit-font-smoothing:antialiased;
-  }
-  ::selection{background:var(--kfc-red);color:#fff}
-  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
-  .serif{font-family:'Fraunces',Georgia,serif}
-
-  /* ---------- stripes ---------- */
-  .stripes{background:repeating-linear-gradient(180deg,var(--kfc-red) 0 15%,var(--white) 15% 30%)}
-  .stripes-v{background:repeating-linear-gradient(90deg,var(--kfc-red) 0 50%,var(--white) 50% 100%);background-size:72px 100%}
-  .stripe-bar{height:52px}
-
-  /* ---------- top bar ---------- */
-  .topbar{position:relative;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px clamp(20px,4vw,52px);background:var(--white);border-bottom:2px solid var(--ink)}
-  .brandmark{display:flex;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.12em;color:var(--ink);text-decoration:none}
-  .brandmark .colonel{width:34px;height:34px;flex-shrink:0}
-  .topbar .meta{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-
-  /* ---------- hero ---------- */
-  .hero{
-    position:relative;background:var(--cream);
-    padding:clamp(40px,5vw,72px) clamp(20px,4vw,52px) 0;
-    overflow:hidden;border-bottom:2px solid var(--ink);
-  }
-  .hero-inner{position:relative;z-index:2;max-width:1440px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:center}
-  .kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--kfc-red);display:inline-flex;align-items:center;gap:10px;font-weight:600}
-  .kicker::before{content:"";width:34px;height:2px;background:var(--kfc-red)}
-  h1.hero-title{font-family:'Archivo Black','Fraunces',sans-serif;font-size:clamp(40px,5.6vw,84px);line-height:.97;letter-spacing:-.005em;margin:26px 0 24px;text-transform:uppercase;color:var(--ink)}
-  h1.hero-title .red{color:var(--kfc-red)}
-  .hero-sub{font-size:clamp(16px,1.5vw,19px);color:var(--ink-soft);max-width:600px;line-height:1.62;margin-bottom:40px}
-  .hero-bucket{position:relative;justify-self:center;width:min(88%,440px);margin-right:clamp(0px,3vw,48px)}
-  .hero-bucket .halo{position:absolute;inset:-12%;border-radius:50%;background:repeating-conic-gradient(var(--kfc-red) 0 12deg,var(--white) 12deg 24deg);animation:spin 40s linear infinite;z-index:0}
-  .hero-bucket img{position:relative;z-index:1;width:100%;filter:drop-shadow(0 34px 44px rgba(20,0,0,.35))}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .hero-stats{position:relative;z-index:2;max-width:1440px;margin:40px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));border-top:2px solid var(--ink)}
-  .hstat{padding:22px 22px 26px 0;border-right:1px solid var(--line);margin-right:22px}
-  .hstat:last-child{border-right:none}
-  .hstat .num{font-family:'Archivo Black','Fraunces',sans-serif;font-size:clamp(30px,3vw,44px);line-height:1.05;color:var(--ink)}
-  .hstat .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:9px;line-height:1.5}
-  @media (max-width:900px){.hero-inner{grid-template-columns:1fr}.hero-bucket{width:min(72vw,380px);margin-top:8px}}
-
-  /* ---------- ticker ---------- */
-  .ticker{background:var(--ink);color:var(--white);overflow:hidden;border-bottom:2px solid var(--ink)}
-  .ticker-track{display:flex;gap:0;white-space:nowrap;width:max-content;animation:tick 30s linear infinite}
-  .ticker span{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.18em;text-transform:uppercase;padding:14px 0}
-  .ticker .dot{color:var(--kfc-red);padding:14px 22px}
-  @keyframes tick{to{transform:translateX(-50%)}}
-
-  /* ---------- layout with chapter rail ---------- */
-  .shell{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1440px;margin:0 auto}
-  nav.rail{position:sticky;top:0;height:100vh;overflow-y:auto;padding:48px 26px 40px 38px;border-right:1px solid var(--line);background:var(--paper)}
-  .rail-head{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
-  .rail a{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--ink-soft);padding:9px 0;font-size:13.5px;line-height:1.35;transition:color .2s}
-  .rail a .idx{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);min-width:22px;transition:color .2s}
-  .rail a:hover{color:var(--ink)}
-  .rail a.active{color:var(--kfc-red);font-weight:600}
-  .rail a.active .idx{color:var(--kfc-red)}
-  .rail-foot{margin-top:32px}
-  .rail-foot .mini-stripes{display:grid;grid-template-columns:repeat(5,10px);gap:5px;margin-bottom:14px}
-  .rail-foot .mini-stripes i{height:34px;background:var(--kfc-red)}
-  .rail-foot .mini-stripes i:nth-child(even){background:var(--ink)}
-  .rail-foot p{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.06em}
-
-  main{padding:0 clamp(22px,4.5vw,72px) 120px;min-width:0}
-  section.chapter{padding-top:76px;scroll-margin-top:10px}
-  .ch-head{display:flex;align-items:baseline;gap:20px;border-bottom:3px solid var(--kfc-red);padding-bottom:18px;margin-bottom:38px;flex-wrap:wrap}
-  .ch-num{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.1em;color:var(--kfc-red)}
-  .ch-title{font-family:'Archivo Black','Fraunces',sans-serif;font-size:clamp(28px,3.4vw,46px);line-height:1.04;letter-spacing:-.005em;text-transform:uppercase}
-  .ch-deck{font-size:17px;color:var(--ink-soft);max-width:760px;margin:-18px 0 34px}
-  .content{max-width:780px}
-  h3{font-family:'Fraunces',serif;font-size:23px;font-weight:600;margin:44px 0 14px;line-height:1.25}
-  h4{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--kfc-red);margin:34px 0 12px;font-weight:600}
-  p{margin-bottom:18px;color:var(--ink-soft)}
-  p strong,li strong{color:var(--ink)}
-  .lead{font-size:19px;line-height:1.7;color:var(--ink)}
-  ul.tight{margin:0 0 20px 22px}
-  ul.tight li{margin-bottom:10px;color:var(--ink-soft)}
-  sup.cite{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500}
-  sup.cite a{color:var(--kfc-red);text-decoration:none;padding:0 1px}
-  sup.cite a:hover{text-decoration:underline}
-
-  .callout{border-left:4px solid var(--kfc-red);background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:20px 26px;margin:30px 0;font-size:15.5px;color:var(--ink)}
-  .callout .co-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--kfc-red);display:block;margin-bottom:8px;font-weight:600}
-
-  .exhibit{margin:52px calc(-1 * clamp(0px,2vw,28px));padding:34px clamp(20px,3vw,44px);background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .exhibit-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
-  .exhibit-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--kfc-red);font-weight:600}
-  .exhibit-src{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em}
-  .chart{width:100%;height:460px}
-  .chart.tall{height:520px}
-  @media (max-width:760px){.chart{height:380px}.chart.tall{height:440px}}
-
-  /* red band break */
-  .band-red{background:var(--kfc-red);color:var(--white);margin:64px calc(-1 * clamp(22px,4.5vw,72px));padding:44px clamp(22px,4.5vw,72px);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
-  .band-red .br-k{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;opacity:.85;margin-bottom:14px;font-weight:600}
-  .band-red .br-t{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,2.6vw,34px);line-height:1.15;text-transform:uppercase;max-width:900px}
-  .band-red .br-s{margin-top:14px;font-size:14.5px;opacity:.92;max-width:760px;line-height:1.6}
-  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--kfc-red);z-index:200;transition:width .12s linear}
-
-  .tbl-wrap{overflow-x:auto;margin:34px 0;border-top:3px solid var(--ink)}
-  table{width:100%;border-collapse:collapse;font-size:13.8px;min-width:680px}
-  caption{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:12px 0}
-  th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;text-align:left;color:var(--white);padding:12px 14px;background:var(--ink);white-space:nowrap}
-  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft);line-height:1.5}
-  td b,td strong{color:var(--ink)}
-  tr.hl td{background:#fdeef0}
-  td .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 8px;border:1px solid var(--line);text-transform:uppercase;color:var(--ink-soft);margin-right:4px;white-space:nowrap}
-  td .pill.red{border-color:var(--kfc-red);color:var(--kfc-red)}
-
-  .swot{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin:36px 0}
-  .swot>div{background:var(--white);padding:26px 28px}
-  .swot h5{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-  .swot h5::before{content:"";width:10px;height:10px;background:var(--ink)}
-  .swot .s h5::before{background:var(--green)}
-  .swot .w h5::before{background:var(--gold)}
-  .swot .o h5::before{background:var(--navy)}
-  .swot .t h5::before{background:var(--kfc-red)}
-  .swot li{margin-bottom:10px;font-size:14px;color:var(--ink-soft);margin-left:16px}
-  @media (max-width:820px){.swot{grid-template-columns:1fr}}
-
-  .rec{border-top:1px solid var(--line);padding:30px 0;display:grid;grid-template-columns:64px 1fr;gap:22px}
-  .rec:last-child{border-bottom:1px solid var(--line)}
-  .rec .rn{font-family:'Archivo Black',sans-serif;font-size:38px;color:var(--kfc-red);line-height:1}
-  .rec h6{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:8px}
-  .rec p{font-size:14.8px;margin-bottom:10px}
-  .rec .kpi{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--navy);letter-spacing:.04em;border-left:2px solid var(--navy);padding-left:12px;margin-top:8px;line-height:1.6}
-
-  .sources li{list-style:none;font-size:13px;color:var(--ink-soft);padding:9px 0;border-bottom:1px dashed var(--line);display:flex;gap:14px;line-height:1.5}
-  .sources li .snum{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--kfc-red);min-width:30px;padding-top:3px;flex-shrink:0}
-  .sources a{color:var(--navy);text-decoration:none;word-break:break-all}
-  .sources a:hover{text-decoration:underline}
-
-  footer{border-top:3px solid var(--ink);margin-top:90px;padding:34px 0 10px;font-size:12.5px;color:var(--muted);line-height:1.8}
-  footer .disc{max-width:820px}
-
-  .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
-  .rv.on{opacity:1;transform:none}
-
-  .comp-fig{margin:34px 0;border:2px solid var(--ink);background:var(--white)}
-  .comp-fig img{width:100%;height:280px;object-fit:cover;display:block}
-  .comp-fig figcaption{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:10px 14px;border-top:2px solid var(--ink);background:var(--cream)}
-  .mobilenav{display:none;position:sticky;top:0;z-index:100;background:var(--white);border-bottom:2px solid var(--ink);padding:12px 20px}
-  .mobilenav select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:10px;background:var(--paper);border:1px solid var(--line);color:var(--ink)}
-  @media (max-width:1020px){.shell{grid-template-columns:1fr}nav.rail{display:none}.mobilenav{display:block}}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="progress"></div>
@@ -478,3 +313,134 @@
         <li><b>Trading-down consumer</b> — QSR gaining occasions from full-service dining.<sup class="cite"><a href="#src-statista">[8]</a></sup></li>
       </ul></div>
       <div class="t"><h5>Threats</h5><ul>
+        <li><b>Escalating value war</b> — McSmart tiers and Penny Pinchers reset entry-price expectations.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup><sup class="cite"><a href="#src-hj">[12]</a></sup></li>
+        <li><b>Popeyes / Wendy's entry</b> — first direct global fried-chicken challenger in decades.<sup class="cite"><a href="#src-statista">[8]</a></sup></li>
+        <li><b>Labour cost ratchet</b> — 4.75% award rise FY27, C13 phase-out, gig minimum pay.<sup class="cite"><a href="#src-fwc">[17]</a></sup></li>
+        <li><b>Delivery duopoly pricing</b> — commission and fee pressure post-Menulog.<sup class="cite"><a href="#src-conv">[14c]</a></sup></li>
+        <li><b>GYG's daypart land-grab</b> — 24/7 expansion and a 100+ store Australian pipeline contesting sites and occasions.<sup class="cite"><a href="#src-gygq">[13d]</a></sup><sup class="cite"><a href="#src-gyg26">[13f]</a></sup></li>
+        <li><b>Cult chicken insurgents</b> — El Jannah (50 → ~200 planned, ~A$1bn PE backing) leads NeNe, Gami, Frango, Chargrill Charlie's and viral newcomers attacking on authenticity.<sup class="cite"><a href="#src-ej">[19]</a></sup><sup class="cite"><a href="#src-wars">[20]</a></sup></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CH 9 RECOMMENDATIONS ================= -->
+<section class="chapter rv" id="ch9">
+  <div class="ch-head"><span class="ch-num">09 /</span><h2 class="ch-title">Strategic recommendations</h2></div>
+  <p class="ch-deck">Six moves for FY27–FY29 — sequenced from defending the core to building new occasions.</p>
+  <div class="content">
+    <div class="rec"><div class="rn">1</div><div>
+      <h6>Win the daypart war at trial speed, not pilot speed</h6>
+      <p>Breakfast and late-night are 36% of the market and its fastest growers, and KFC is under-indexed in both.<sup class="cite"><a href="#src-ar">[5]</a></sup> The 16-store Gold Coast breakfast trial should be run as a <b>time-boxed scale decision</b> — predefined success gates (incremental transactions, cannibalisation, labour model) and a national go/no-go within 12 months — because McDonald's McCafé moat and GYG's 24/7 build-out mean the window to claim "chicken for breakfast/late-night" is finite.<sup class="cite"><a href="#src-gygq">[13d]</a></sup> Late-night hours extension is lower-risk and should precede breakfast nationally.</p>
+      <div class="kpi">KPI: daypart sales mix; incremental transactions per store; trial-to-decision cycle time.</div>
+    </div></div>
+    <div class="rec"><div class="rn">2</div><div>
+      <h6>Sharpen the value architecture without joining the sub-$4 race</h6>
+      <p>KFC's A$4.95 Go Bucket is the right anchor — a protein-led entry meal the burger chains cannot match at A$3 — but the mid-ladder has gaps against McSmart Meal (A$7.95) and HJ Super Stunner (A$9.15).<sup class="cite"><a href="#src-mcsmart">[11]</a></sup><sup class="cite"><a href="#src-hj">[12]</a></sup> Recommended: a permanent <b>A$7.95–8.95 solo bundle</b> (burger/wrap + chips + drink) to close the McSmart gap, keep sliders at promotional A$2 as the traffic spike, and make family feasts (from A$28.95) the loudly advertised centrepiece of dinner value, where chicken's per-person sharing economics beat every burger rival.<sup class="cite"><a href="#src-kfcp2">[16b]</a></sup></p>
+      <div class="kpi">KPI: value-perception tracker (close 1pt gap to HJ's 61%); mix of entry-tier transactions; feast attachment at dinner.</div>
+    </div></div>
+    <div class="rec"><div class="rn">3</div><div>
+      <h6>Rebalance digital toward owned channels before the duopoly reprices</h6>
+      <p>Post-Menulog, aggregator commissions have only one direction.<sup class="cite"><a href="#src-conv">[14c]</a></sup> KFC should set an explicit <b>owned-vs-aggregated target</b> within its 43.2% digital mix — GYG's 19.5% owned-app share proves the ceiling is high — using app-exclusive value (extend the McSmart-style app-only logic with Go Bucket bundles), loyalty mechanics, and white-label delivery to keep platform reach without platform economics.<sup class="cite"><a href="#src-gyg2">[13b]</a></sup><sup class="cite"><a href="#src-menulog2">[14b]</a></sup> Simultaneously, use KFC's scale to negotiate bespoke national terms with both platforms and A/B-test delivery-fee structures as Collins did successfully in FY26.<sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+      <div class="kpi">KPI: owned-channel % of digital sales; delivery contribution margin per order; app MAU and order frequency.</div>
+    </div></div>
+    <div class="rec"><div class="rn">4</div><div>
+      <h6>Build the labour-cost productivity engine now</h6>
+      <p>With award wages up ~19% cumulatively since 2023 and the C13 phase-out compressing entry rates, labour is the structural margin threat of the decade.<sup class="cite"><a href="#src-fwc">[17]</a></sup><sup class="cite"><a href="#src-fwc2">[17b]</a></sup> The answer is throughput per rostered hour: extend kiosks beyond the current 100+ restaurants, kitchen automation and AI-driven rostering to demand curves, and multi-skilling to cover daypart extensions without net-new labour hours. Embed <b>proactive compliance auditing</b> (breaks, rostering) as a control system — the FY26 class-action settlement shows the cost of getting this wrong.<sup class="cite"><a href="#src-ar">[5]</a></sup></p>
+      <div class="kpi">KPI: sales per labour hour; kiosk order share; zero repeat compliance findings.</div>
+    </div></div>
+    <div class="rec"><div class="rn">5</div><div>
+      <h6>Densify the network with format flexibility</h6>
+      <p>McDonald's is spending A$1bn to be within five minutes of most Australians; convenience is its moat.<sup class="cite"><a href="#src-br">[7]</a></sup> KFC's counter is format elasticity: sustain the 7–10 build rate, prioritise <b>drive-thru and drive-thru-only formats on smaller footprints</b> (which fit infill sites HJ and Macca's can't use), and contest the same arterial sites GYG's 100+ store pipeline is chasing.<sup class="cite"><a href="#src-quartr">[6]</a></sup><sup class="cite"><a href="#src-br">[7]</a></sup><sup class="cite"><a href="#src-gyg26">[13f]</a></sup> Site selection should explicitly model cannibalisation of Red Rooster's shrinking suburban trade.<sup class="cite"><a href="#src-sh26">[4]</a></sup></p>
+      <div class="kpi">KPI: new-build cash-on-cash returns; % of population within 10-minute drive; drive-thru mix of new builds.</div>
+    </div></div>
+    <div class="rec"><div class="rn">6</div><div>
+      <h6>Fortify chicken leadership before the insurgents scale</h6>
+      <p>The best defence against Popeyes — and against a General Atlantic-funded El Jannah marching to 200 stores — is a pre-emptive quality-and-craveability gap: keep the FY25–26 innovation cadence (Zinger Banh Mi, Upside Down Double) with at least one <b>signature chicken moment per quarter</b>, protect the "best chips" and bone-in Original Recipe equities in media, and use Kwench to add a beverage occasion no entrant can copy on day one.<sup class="cite"><a href="#src-ar">[5]</a></sup><sup class="cite"><a href="#src-statista">[8]</a></sup> Study what the insurgents win on: charcoal theatre, sauce cults (El Jannah's garlic, Flappy's signature dip), halal credentials and generous share formats — then answer with KFC-scale versions rather than discounting.<sup class="cite"><a href="#src-ej">[19]</a></sup><sup class="cite"><a href="#src-flap">[21]</a></sup> Prioritise defence of Western Sydney and outer-metro growth corridors where El Jannah, Frango, Flappy's and Fried Brothers are concentrated, and monitor Wendy's/Popeyes beachhead markets for consumer response with pre-positioned value offers in overlap trade zones.<sup class="cite"><a href="#src-wars">[20]</a></sup></p>
+      <div class="kpi">KPI: chicken-category share of traffic; brand index lead vs #2; SSS differentials in El Jannah / entrant overlap zones.</div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ================= CH 10 RISKS & SOURCES ================= -->
+<section class="chapter rv" id="ch10">
+  <div class="ch-head"><span class="ch-num">10 /</span><h2 class="ch-title">Risks, sources &amp; disclaimer</h2></div>
+  <div class="content">
+    <h3>10.1 &nbsp;Watch list — twelve months ahead</h3>
+    <ul class="tight">
+      <li><b>FY27 trading updates</b> — Collins' first-eight-weeks sales were +6.7% in Australia; watch whether momentum holds as value investment annualises.<sup class="cite"><a href="#src-rb">[1]</a></sup></li>
+      <li><b>McSmart performance</b> — whether McDonald's three-tier architecture (from 1 July 2026) pulls KFC's light users.<sup class="cite"><a href="#src-mcsmart">[11]</a></sup></li>
+      <li><b>Aggregator pricing moves</b> — first commission or fee changes under the duopoly.<sup class="cite"><a href="#src-conv">[14c]</a></sup></li>
+      <li><b>Popeyes / Wendy's announcements</b> — site signings and franchise partners.<sup class="cite"><a href="#src-statista">[8]</a></sup></li>
+      <li><b>Breakfast trial readout</b> — Gold Coast results and rollout decision.<sup class="cite"><a href="#src-ar">[5]</a></sup></li>
+      <li><b>Wage cycle</b> — FY28 Annual Wage Review submissions; C13 phase-out mechanics.<sup class="cite"><a href="#src-fwc2">[17b]</a></sup></li>
+      <li><b>El Jannah's rollout &amp; IPO talk</b> — pace of the 25-store program into QLD/SA, any ASX float, and whether the majors' price-war response spreads beyond Sydney.<sup class="cite"><a href="#src-ej">[19]</a></sup><sup class="cite"><a href="#src-ejd">[19d]</a></sup></li>
+    </ul>
+
+    <h3>10.2 &nbsp;Sources</h3>
+    <ol class="sources">
+      <li id="src-rb"><span class="snum">1</span><span>RetailBiz — <a href="https://www.retailbiz.com.au/latest-news/collins-foods-posts-record-fy26-profit-and-revenue/" target="_blank" rel="noopener">"Collins Foods posts record FY26 profit and revenue"</a> (3 Jul 2026)</span></li>
+      <li id="src-ibis"><span class="snum">2</span><span>IBISWorld — <a href="https://www.ibisworld.com/australia/market-size/fast-food-takeaway-food-services/2005/" target="_blank" rel="noopener">Fast Food &amp; Takeaway Food Services in Australia: Market Size 2026</a> (A$29.7bn, +0.3%)</span></li>
+      <li id="src-ibisb"><span class="snum">2b</span><span>IBISWorld — <a href="https://www.ibisworld.com/australia/industry/fast-food-takeaway-food-services/2005/" target="_blank" rel="noopener">Fast Food &amp; Takeaway Food Services Industry Analysis, May 2026</a> (28,219 businesses; 1.4% CAGR)</span></li>
+      <li id="src-chicken"><span class="snum">3</span><span>IBISWorld — <a href="https://www.ibisworld.com/australia/industry/takeaway-chicken-shops/5500/" target="_blank" rel="noopener">Takeaway Chicken Shops in Australia, Oct 2025</a> (A$6.3bn; 1,972 businesses; 2.8% CAGR)</span></li>
+      <li id="src-sh26"><span class="snum">4</span><span>ScrapeHero location reports, 2026 — <a href="https://www.scrapehero.com/location-reports/10-largest-food-chains-in-australia/" target="_blank" rel="noopener">10 Largest Food Chains in Australia (2026)</a> — brand store counts as of Feb–Jul 2026: Subway 1,256 (Feb); McDonald's 1,078 (Jul); KFC 817 (16 Jun); Domino's 720 (Mar); Hungry Jack's 489 (Jul); Red Rooster 325 (Jan)</span></li>
+      <li id="src-ir"><span class="snum">4b</span><span>Inside Retail — <a href="https://insideretail.com.au/news/kfc-opens-its-800th-store-in-australia-202409" target="_blank" rel="noopener">"KFC opens its 800th store in Australia"</a> (Sep 2024: Oran Park, Sydney; "fastest-growing QSR in Australia over the past six years")</span></li>
+      <li id="src-gap"><span class="snum">4c</span><span>GapMaps — <a href="https://www.gapmaps.com/fast-food-and-qsr-sector-records-strongest-growth-in-a-decade-adding-250-net-new-stores/" target="_blank" rel="noopener">2025 Annual Fast Food &amp; QSR Network Report</a> (Mar 2026: 12 months to 31 Dec 2025 — sector net +250 stores, strongest in a decade; net growth by brand: Zambrero +31, KFC +29, GYG +27, McDonald's +25, Subway +18, Oporto +17, Hungry Jack's +16, El Jannah +15, Nando's +10, Red Rooster −1; top-5 brands within 3km of 82% of Australians)</span></li>
+      <li id="src-ar"><span class="snum">5</span><span>Collins Foods — <a href="https://www.collinsfoods.com/wp-content/uploads/2026/06/CKF-Annual-Report-2026.pdf" target="_blank" rel="noopener">Annual Report 2026</a> (FY26: revenue A$1,241.3m, SSS +2.7%, EBITDA A$237.1m, digital 43.2%, 295 restaurants; daypart data; Kwench &amp; breakfast plans)</span></li>
+      <li id="src-quartr"><span class="snum">6</span><span>Quartr — <a href="https://quartr.com/events/collins-foods-limited-ckf-h2-2026_FkmZjwH8" target="_blank" rel="noopener">Collins Foods H2 2026 earnings summary</a> (30 Jun 2026: FY27 capex, 7–10 new restaurants, cost outlook, Taco Bell exit)</span></li>
+      <li id="src-br"><span class="snum">7</span><span>Burgess Rawson — <a href="https://www.burgessrawson.com.au/wp-content/uploads/2025/08/FF-Industry-Insights-Report-JUN-2025-DIGITAL.pdf" target="_blank" rel="noopener">Fast Food Industry Insights, Jun 2025</a> (McDonald's 23.2% share, A$1bn expansion; Euromonitor 32% growth forecast; outlet density; rents)</span></li>
+      <li id="src-statista"><span class="snum">8</span><span>Statista — <a href="https://www.statista.com/topics/11386/fast-food-restaurants-in-australia/" target="_blank" rel="noopener">Fast food restaurants in Australia — statistics &amp; facts</a> (Jun 2025: Wendy's entry Jan 2025; Popeyes etc.; trading-down behaviour)</span></li>
+      <li id="src-nature"><span class="snum">9</span><span>AdNews / Nature — <a href="https://www.adnews.com.au/news/the-secret-to-australia-s-most-loved-fast-food-brand" target="_blank" rel="noopener">"The secret to Australia's most loved fast food brand"</a> (2023: share of spend 54/22/12; chips 76%; value-for-money scores)</span></li>
+      <li id="src-fy25"><span class="snum">10</span><span>Collins Foods ASX release — <a href="https://announcements.asx.com.au/asxpdf/20250624/pdf/06l14ndk84xlpc.pdf" target="_blank" rel="noopener">Group Results FY25 and Outlook</a> (FY25: revenue A$1,154.2m, SSS +0.3%, EBITDA margin 19.3%, digital 34.2%; FY24 comparatives; input deflation)</span></li>
+      <li id="src-mcsmart"><span class="snum">11</span><span>Frugal Feeds — <a href="https://www.frugalfeeds.com.au/2026/mcdonalds-unveils-new-mcsmart-value-range-loose-change-menu-changes-starting-july-1/" target="_blank" rel="noopener">"McDonald's Unveils New McSmart Value Range… Starting July 1"</a> (Jun 2026: $6.95/$7.95/$9.95)</span></li>
+      <li id="src-hj"><span class="snum">12</span><span>Frugal Feeds — <a href="https://www.frugalfeeds.com.au/hungry-jacks-prices-menu/" target="_blank" rel="noopener">Hungry Jack's Menu Prices (July 2026)</a> (Penny Pinchers; Super Stunners; vouchers)</span></li>
+      <li id="src-gyg"><span class="snum">13</span><span>Proactive Investors — <a href="https://www.proactiveinvestors.com.au/companies/news/1077157/guzman-y-gomez-delivers-record-fy25-results-surpasses-1-billion-milestone-1077157.html" target="_blank" rel="noopener">"Guzman y Gomez delivers record FY25 results"</a> (Aug 2025)</span></li>
+      <li id="src-gyg2"><span class="snum">13b</span><span>Mi3 — <a href="http://www.mi-3.com.au/22-08-2025/guzman-y-gomez-surpasses-1bn-network-sales-chain-expands-global-footprint" target="_blank" rel="noopener">"GYG surpasses $1bn in network sales"</a> (Aug 2025: segment detail, restaurant counts, digital 19.5%)</span></li>
+      <li id="src-gygar"><span class="snum">13c</span><span>GYG — <a href="https://www.guzmanygomez.com.au/wp-content/uploads/2025/08/Guzman-y-Gomez-2025-Annual-Report.pdf" target="_blank" rel="noopener">2025 Annual Report</a> (drive-thru margin 22%, franchisee ROI 50%, 24/7 count)</span></li>
+      <li id="src-gygq"><span class="snum">13d</span><span>GYG ASX release — <a href="https://news.finclear.tradecentre.io/asx/document/20251009/03005492.pdf" target="_blank" rel="noopener">Q1 FY26 quarterly</a> (Oct 2025: 23 restaurants trading 24/7)</span></li>
+      <li id="src-gyg3"><span class="snum">13e</span><span>A Rich Life — <a href="https://arichlife.com.au/guzman-y-gomez-ltd-asx-gyg-fy25-results-investors-flee-as-growth-stumbles/" target="_blank" rel="noopener">GYG FY25 analysis</a> (daypart initiatives: after-9pm, 24/7, breakfast)</span></li>
+      <li id="src-gyg26"><span class="snum">13f</span><span>Morningstar — <a href="https://www.morningstar.com.au/stocks/investors-cheer-guzman-dialing-back-global-ambitions" target="_blank" rel="noopener">"Investors cheer Guzman dialing back global ambitions"</a> (25 May 2026: ~250 Australian restaurants, 32 FY26 openings, 100+ site pipeline, US exit, 1,000-store long-run ambition)</span></li>
+      <li id="src-menulog"><span class="snum">14</span><span>ABC News — <a href="https://www.abc.net.au/news/2025-11-25/menulog-uber-eats-commercial-agreement/106050600" target="_blank" rel="noopener">"Menulog signs agreement to send users to Uber Eats…"</a> (Nov 2025; TWU minimum-pay deal)</span></li>
+      <li id="src-menulog2"><span class="snum">14b</span><span>QSR Media — <a href="https://qsrmedia.com.au/food-services/exclusive/menulog-exits-australia-after-20-years-uber-doordash-dominate" target="_blank" rel="noopener">"Menulog exits Australia after 20 years…"</a> (Nov 2025: analyst commentary, duopoly implications)</span></li>
+      <li id="src-conv"><span class="snum">14c</span><span>The Conversation — <a href="https://theconversation.com/menulog-is-closing-in-australia-could-food-delivery-soon-cost-more-269602" target="_blank" rel="noopener">"Menulog is closing in Australia. Could food delivery soon cost more?"</a> (Nov 2025: IBISWorld shares 54/24/15)</span></li>
+      <li id="src-gygmeal"><span class="snum">15</span><span>GYG — <a href="https://www.guzmanygomez.com.au/our-12-chicken-mini-meal-now-on-menulog/" target="_blank" rel="noopener">"$12 Chicken Mini Meal"</a> (May 2025)</span></li>
+      <li id="src-kfcp"><span class="snum">16</span><span>KFC menu price guide — <a href="https://kfcmenuprice.au/" target="_blank" rel="noopener">KFC Menu with Prices (July 2026)</a> (Go Bucket $4.95; sliders $3.75; bowls; boxes)</span></li>
+      <li id="src-kfcp2"><span class="snum">16b</span><span>Frugal Feeds — <a href="https://www.frugalfeeds.com.au/kfc-prices-menu/" target="_blank" rel="noopener">KFC Menu Prices Australia (July 2026)</a> (Zinger Box $14.95; boxed meals; feasts)</span></li>
+      <li id="src-fwc"><span class="snum">17</span><span>ABC News — <a href="https://www.abc.net.au/news/2026-06-02/minimum-wage-increase-june-2026-australia/106746542" target="_blank" rel="noopener">"FWC annual ruling lifts minimum wage…"</a> (Jun 2026: +4.75% awards; NMW $26.44; sector concentration)</span></li>
+      <li id="src-fwc2"><span class="snum">17b</span><span>Squire Patton Boggs — <a href="https://www.squirepattonboggs.com/insights/publications/2026-annual-wage-review-decision-fwc-increases-the-national-minimum-wage-and-award-rates/" target="_blank" rel="noopener">2026 Annual Wage Review analysis</a> (C13 phase-out; NMW +5.97%)</span></li>
+      <li id="src-fwc3"><span class="snum">17c</span><span>Fair Work Ombudsman — <a href="https://www.fairwork.gov.au/about-us/workplace-laws/annual-wage-review/2023-2024-annual-wage-review" target="_blank" rel="noopener">2023–24 Annual Wage Review</a> (+3.75%, $24.10 from 1 Jul 2024)</span></li>
+      <li id="src-fwc4"><span class="snum">17d</span><span>FairWork Mate — <a href="https://fairworkmate.com.au/annual-wage-review/2024-25" target="_blank" rel="noopener">Annual Wage Review 2024-25 summary</a> (prior-year $23.23/hr; 2023's +5.75%)</span></li>
+      <li id="src-dd"><span class="snum">18</span><span>DoorDash — <a href="https://www.doordash.com/en/business/hungry-jacks-860686/menu" target="_blank" rel="noopener">Hungry Jack's delivery menu pricing</a> (delivery-vs-in-store price comparison)</span></li>
+      <li id="src-ej"><span class="snum">19</span><span>General Atlantic / El Jannah — <a href="https://www.generalatlantic.com/media-article/el-jannah-announces-restaurant-expansion-plan-and-financial-investment-from-general-atlantic/" target="_blank" rel="noopener">"El Jannah Announces Restaurant Expansion Plan and Financial Investment From General Atlantic"</a> (28 Nov 2025: 50 → ~200 restaurants; 25+ openings in 12 months; 160k weekly transactions; 5 stores in 2020)</span></li>
+      <li id="src-ejb"><span class="snum">19b</span><span>delicious. — <a href="https://www.delicious.com.au/food-files/news-articles/article/el-jannah-chicken-shop-sold-1-billion/kz105n7v" target="_blank" rel="noopener">"El Jannah chicken shop sold for $1 billion"</a> (2 Dec 2025: GA controlling stake near A$1bn; founders retain minority; QLD/SA expansion; Middle East option)</span></li>
+      <li id="src-ejc"><span class="snum">19c</span><span>AFR Street Talk — <a href="https://www.afr.com/street-talk/pe-swarms-1b-el-jannah-morgan-stanley-asks-bidders-to-cross-road-20251005-p5n06k" target="_blank" rel="noopener">"Private equity firms swarm El Jannah auction…"</a> (5 Oct 2025: ~A$1bn price tag; BGH, Bain, Goldman PE bids)</span></li>
+      <li id="src-ejd"><span class="snum">19d</span><span>Capital Brief — <a href="https://www.capitalbrief.com/article/morgan-stanley-is-hungry-for-australias-next-fast-food-ipo-dac2e33b-c672-414f-b094-5b77b38e190f/" target="_blank" rel="noopener">"Morgan Stanley is hungry for Australia's next fast food IPO"</a> (Jun 2025: El Jannah ~A$300m revenue track record; most likely QSR IPO candidate)</span></li>
+      <li id="src-wars"><span class="snum">20</span><span>AFR — <a href="https://www.afr.com/companies/retail/australia-s-chicken-wars-carve-up-fast-food-s-pecking-order-20241028-p5klsi" target="_blank" rel="noopener">"Chicken wars: KFC battles Chargrill Charlie's, Frango, El Jannah, NeNe and Gami for supremacy"</a> (8 Nov 2024: cult chains on Collins Foods' worry list)</span></li>
+      <li id="src-flap"><span class="snum">21</span><span>realcommercial — <a href="https://www.realcommercial.com.au/news/viral-chicken-chain-flappys-announces-melb-expansion-plans" target="_blank" rel="noopener">"Viral chicken chain Flappy's announces Melb expansion plans"</a> (19 Aug 2025: Penrith + Westfield Pitt St; Mambourin first VIC store; ~20 locations planned through 2026; 4M TikTok views in a month)</span></li>
+      <li id="src-flapb"><span class="snum">21b</span><span>Flappy's Fried Chicken — <a href="https://www.flappys.com.au/" target="_blank" rel="noopener">flappys.com.au</a> (Louisiana-style; halal-certified; 8+ locations opening 2026; 100M+ views)</span></li>
+      <li id="src-fb"><span class="snum">22</span><span>Fried Brothers — <a href="https://friedbrothers.au/" target="_blank" rel="noopener">friedbrothers.au</a> (Sydney's original Nashville fried chicken; Mount Druitt food-truck origins; Mount Druitt, Blacktown, Winston Hills, Haymarket)</span></li>
+      <li id="src-nene"><span class="snum">23</span><span>Monkish — <a href="https://monkish.com.au/nene-chicken-franchise-profile/" target="_blank" rel="noopener">NeNe Chicken Franchise Profile 2026</a> (Jul 2026: 40+ Australian outlets; ST Group master franchise; 5–8 sub-franchised openings/yr to 2030)</span></li>
+      <li id="src-nand"><span class="snum">23b</span><span>ScrapeHero — <a href="https://www.scrapehero.com/location-reports/Nando%27s-Australia/" target="_blank" rel="noopener">Number of Nando's locations in Australia in 2026</a> (6 May 2026: 143 restaurants)</span></li>
+      <li id="src-op"><span class="snum">24</span><span>Mi3 — <a href="http://www.mi-3.com.au/18-06-2026/fast-foods-new-problem-consumers-are-eating-out-less-switching-brands-more-oporto-finds" target="_blank" rel="noopener">Oporto consumer-testing feature</a> (18 Jun 2026: 225+ franchise stores; eating-out-less environment)</span></li>
+      <li id="src-nand2"><span class="snum">24b</span><span>QSR Media — <a href="https://qsrmedia.com.au/videos/nandos-bets-drive-thru-and-site-precision-win-anz" target="_blank" rel="noopener">"Nando's bets on drive-thru and site precision to win ANZ"</a> (10 Jun 2026: 25 new restaurants by 2028; 16 in pipeline; first three drive-thrus)</span></li>
+      <li id="src-cc"><span class="snum">25</span><span>The Age — <a href="https://www.theage.com.au/business/entrepreneurship/chargrill-charlie-s-is-the-little-chook-shop-that-could-it-s-just-not-so-little-any-more-20260703-p60chq.html" target="_blank" rel="noopener">"Chargrill Charlie's is the little chook shop that could…"</a> (Jul 2026: 30 stores; ~5% of Craveable's 630+ store network)</span></li>
+      <li id="src-ccb"><span class="snum">25b</span><span>Franchise Executives — <a href="https://franchiseexecutives.com.au/chargrill-charlies-boss-reveals-whats-next-for-the-chicken-chain/" target="_blank" rel="noopener">"Chargrill Charlie's boss reveals what's next for the chicken chain"</a> (20 May 2026: four openings in six months; FY27 menu/labour program; PAG investment appetite)</span></li>
+      <li id="src-frango"><span class="snum">26</span><span>Frango — <a href="https://www.frangos.com.au/" target="_blank" rel="noopener">frangos.com.au</a> (Portuguese charcoal chicken since Petersham 1989; 17 Sydney locations listed)</span></li>
+      <li id="src-belles"><span class="snum">26b</span><span>Wikipedia — <a href="https://en.wikipedia.org/wiki/Belles_Hot_Chicken" target="_blank" rel="noopener">Belles Hot Chicken</a> (Mar 2025: six trading locations across Melbourne, Sydney, Adelaide; FY23 revenue A$10.5m, +62%)</span></li>
+      <li id="src-gami"><span class="snum">27</span><span>QSR Media — <a href="https://qsrmedia.com.au/videos/gamis-coles-launch-tests-whether-retail-builds-or-erodes-brand-visits" target="_blank" rel="noopener">"Gami's Coles launch tests whether retail builds or erodes brand visits"</a> (11 Jun 2026: supermarket "fakeaway" range)</span></li>
+      <li id="src-gamib"><span class="snum">27b</span><span>QSR Media — <a href="https://qsrmedia.com.au/executive-insights/exclusive/how-gami-chicken-found-growth-in-adapting-what-customers-want" target="_blank" rel="noopener">"How Gami Chicken found growth in adapting to what customers want"</a> (Feb 2024: 39 restaurants; pivot to "Korean chicken brand"; +172% sales growth H2 2023)</span></li>
+    </ol>
+
+    <footer>
+      <p class="disc"><b>Disclaimer.</b> This report was prepared for general informational and discussion purposes only. It synthesises publicly available sources believed reliable as of 24 July 2026, but figures (including third-party market-size, share and menu-price data) may be revised by their publishers, and menu prices vary by location and channel. Nothing here constitutes investment, legal, accounting or other professional advice, nor an official position of KFC, Yum! Brands or Collins Foods. Verified decisions should use primary company disclosures and licensed market data.</p>
+      <p style="margin-top:16px">THE COLONEL'S BATTLEGROUND · AUSTRALIAN QSR DEEP RESEARCH · JULY 2026</p>
+    </footer>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
